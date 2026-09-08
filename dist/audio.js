@@ -1,36 +1,9 @@
 // User-gesture-only Web Audio. Includes a continuous dash loop during Chimpion Mode.
 export class GameAudio {
- constructor(enabled=false){this.enabled=enabled;this.context=null;this.failed=false;this.dashOsc=null;this.dashGain=null;this.dashNoise=null;this.dashTimer=0}
- play(kind){if(!this.enabled||this.failed)return;try{
-  this.context??=new(window.AudioContext||window.webkitAudioContext)();
-  const c=this.context;if(c.state==='suspended')c.resume().catch(()=>{});
-  if(kind==='jump'){this.hoot(c.currentTime,300,540,.13);this.hoot(c.currentTime+.13,480,260,.17);return}
-  if(kind==='chimpion-mode'){this.startDashLoop(8.1);this.oneShot(kind);return}
-  if(['dead','shield-used'].includes(kind))this.stopDashLoop();
-  this.oneShot(kind)
- }catch{this.failed=true;this.enabled=false}}
+ constructor(enabled=false){this.enabled=enabled;this.context=null;this.failed=false;this.dashOsc=null;this.dashLfo=null;this.dashNoise=null;this.dashGain=null;this.dashNoiseGain=null;this.dashTimer=0}
+ play(kind){if(!this.enabled||this.failed)return;try{this.context??=new(window.AudioContext||window.webkitAudioContext)();const c=this.context;if(c.state==='suspended')c.resume().catch(()=>{});if(kind==='jump'){this.hoot(c.currentTime,300,540,.13);this.hoot(c.currentTime+.13,480,260,.17);return}if(kind==='chimpion-mode'){this.startDashLoop(8.1);this.oneShot(kind);return}if(['dead','shield-used'].includes(kind))this.stopDashLoop();this.oneShot(kind)}catch{this.failed=true;this.enabled=false}}
  oneShot(kind){const c=this.context,notes={land:110,pass:670,banana:1150,golden:1480,power:890,'shield-used':180,slide:145,stage:760,'chimpion-mode':980,'PERFECT JUMP':920,'PERFECT SLIDE':840,'CLOSE CALL':520,dead:85,record:1040,click:320};let o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=['banana','golden','record'].includes(kind)?'sine':'triangle';o.frequency.setValueAtTime(notes[kind]||300,c.currentTime);o.frequency.exponentialRampToValueAtTime((notes[kind]||300)*(['banana','golden','stage'].includes(kind)?1.45:.55),c.currentTime+.12);g.gain.setValueAtTime(.035,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.14);o.start();o.stop(c.currentTime+.15)}
  hoot(t,start,end,length){const c=this.context,o=c.createOscillator(),filter=c.createBiquadFilter(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(start,t);o.frequency.exponentialRampToValueAtTime(end,t+length*.55);o.frequency.exponentialRampToValueAtTime(start*.8,t+length);filter.type='bandpass';filter.frequency.setValueAtTime(850,t);filter.frequency.exponentialRampToValueAtTime(580,t+length);filter.Q.value=2.5;o.connect(filter);filter.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.16,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+length);o.start(t);o.stop(t+length+.01)}
- startDashLoop(seconds=8){const c=this.context;this.stopDashLoop(false);
-  const osc=c.createOscillator(),lfo=c.createOscillator(),lfoGain=c.createGain(),gain=c.createGain(),filter=c.createBiquadFilter();
-  osc.type='sawtooth';osc.frequency.setValueAtTime(92,c.currentTime);
-  lfo.type='sine';lfo.frequency.setValueAtTime(7.5,c.currentTime);lfoGain.gain.setValueAtTime(10,c.currentTime);
-  filter.type='lowpass';filter.frequency.setValueAtTime(680,c.currentTime);filter.Q.value=.8;
-  gain.gain.setValueAtTime(.0001,c.currentTime);gain.gain.linearRampToValueAtTime(.05,c.currentTime+.06);
-  lfo.connect(lfoGain);lfoGain.connect(osc.frequency);osc.connect(filter);filter.connect(gain);gain.connect(c.destination);
-  osc.start();lfo.start();
-  const buffer=c.createBuffer(1,c.sampleRate*2,c.sampleRate),data=buffer.getChannelData(0);
-  for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*.18;
-  const noise=c.createBufferSource(),noiseFilter=c.createBiquadFilter(),noiseGain=c.createGain();
-  noise.buffer=buffer;noise.loop=true;noiseFilter.type='highpass';noiseFilter.frequency.setValueAtTime(900,c.currentTime);noiseGain.gain.setValueAtTime(.0001,c.currentTime);noiseGain.gain.linearRampToValueAtTime(.018,c.currentTime+.06);
-  noise.connect(noiseFilter);noiseFilter.connect(noiseGain);noiseGain.connect(c.destination);noise.start();
-  this.dashOsc={osc,lfo};this.dashGain={gain,noiseGain};this.dashNoise=noise;
-  clearTimeout(this.dashTimer);this.dashTimer=setTimeout(()=>this.stopDashLoop(),seconds*1000)
- }
- stopDashLoop(fade=true){const c=this.context;if(!c)return;clearTimeout(this.dashTimer);const now=c.currentTime,tail=fade?.12:.02;
-  try{if(this.dashGain?.gain){this.dashGain.gain.cancelScheduledValues(now);this.dashGain.gain.setValueAtTime(Math.max(.0001,this.dashGain.gain.value||.02),now);this.dashGain.gain.exponentialRampToValueAtTime(.0001,now+tail)}}catch{}
-  try{if(this.dashGain?.noiseGain){this.dashGain.noiseGain.cancelScheduledValues(now);this.dashGain.noiseGain.setValueAtTime(Math.max(.0001,this.dashGain.noiseGain.value||.008),now);this.dashGain.noiseGain.exponentialRampToValueAtTime(.0001,now+tail)}}catch{}
-  try{this.dashOsc?.osc.stop(now+tail+.03)}catch{}try{this.dashOsc?.lfo.stop(now+tail+.03)}catch{}try{this.dashNoise?.stop(now+tail+.03)}catch{}
-  this.dashOsc=null;this.dashGain=null;this.dashNoise=null
- }
+ startDashLoop(seconds=8){const c=this.context;this.stopDashLoop(false);const osc=c.createOscillator(),lfo=c.createOscillator(),lfoGain=c.createGain(),filter=c.createBiquadFilter(),gain=c.createGain();osc.type='sawtooth';osc.frequency.setValueAtTime(92,c.currentTime);lfo.type='sine';lfo.frequency.setValueAtTime(7.5,c.currentTime);lfoGain.gain.setValueAtTime(10,c.currentTime);filter.type='lowpass';filter.frequency.setValueAtTime(680,c.currentTime);filter.Q.value=.8;gain.gain.setValueAtTime(.0001,c.currentTime);gain.gain.linearRampToValueAtTime(.05,c.currentTime+.06);lfo.connect(lfoGain);lfoGain.connect(osc.frequency);osc.connect(filter);filter.connect(gain);gain.connect(c.destination);osc.start();lfo.start();const buffer=c.createBuffer(1,c.sampleRate*2,c.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*.18;const noise=c.createBufferSource(),noiseFilter=c.createBiquadFilter(),noiseGain=c.createGain();noise.buffer=buffer;noise.loop=true;noiseFilter.type='highpass';noiseFilter.frequency.setValueAtTime(900,c.currentTime);noiseGain.gain.setValueAtTime(.0001,c.currentTime);noiseGain.gain.linearRampToValueAtTime(.018,c.currentTime+.06);noise.connect(noiseFilter);noiseFilter.connect(noiseGain);noiseGain.connect(c.destination);noise.start();this.dashOsc=osc;this.dashLfo=lfo;this.dashNoise=noise;this.dashGain=gain;this.dashNoiseGain=noiseGain;clearTimeout(this.dashTimer);this.dashTimer=setTimeout(()=>this.stopDashLoop(),seconds*1000)}
+ stopDashLoop(fade=true){const c=this.context;if(!c)return;clearTimeout(this.dashTimer);const now=c.currentTime,tail=fade?.12:.02;try{if(this.dashGain){this.dashGain.gain.cancelScheduledValues(now);this.dashGain.gain.setValueAtTime(Math.max(.0001,this.dashGain.gain.value||.02),now);this.dashGain.gain.exponentialRampToValueAtTime(.0001,now+tail)}}catch{}try{if(this.dashNoiseGain){this.dashNoiseGain.gain.cancelScheduledValues(now);this.dashNoiseGain.gain.setValueAtTime(Math.max(.0001,this.dashNoiseGain.gain.value||.008),now);this.dashNoiseGain.gain.exponentialRampToValueAtTime(.0001,now+tail)}}catch{}try{this.dashOsc?.stop(now+tail+.03)}catch{}try{this.dashLfo?.stop(now+tail+.03)}catch{}try{this.dashNoise?.stop(now+tail+.03)}catch{}this.dashOsc=null;this.dashLfo=null;this.dashNoise=null;this.dashGain=null;this.dashNoiseGain=null}
 }
