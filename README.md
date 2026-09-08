@@ -24,7 +24,8 @@ Serve `dist/` over HTTP and open `index.html`.
 
 - Stage 1 remains at the base pace for its full first 30 seconds. A new stage starts every 30 active seconds and eases toward a soft-capped target speed.
 - Data-driven short, tall, wide and overhead hazards are assembled by a seeded encounter director. Early low-hop/high-jump pairs use wider recovery timing.
-- Sliding has a minimum useful duration, a dedicated feet-first ground-slide pose, and will not force the standing hitbox into an overhead hazard.
+- Sliding has a minimum useful duration, restores the compact ducking pose, and will not force the standing hitbox into an overhead hazard.
+- Every trap family and banana uses the original 2D obstacle atlas, with visible fallbacks if an asset cannot load.
 - The scenery, hazards and characters remain deliberately 2D, with a shallow scrolling grass-and-soil foreground instead of a tall lower panel.
 - Bananas, rare Golden Bananas, Perfect actions and Near Misses build Flow. Maximum Flow activates eight seconds of Chimpion Mode.
 - Shields absorb one hit, resolve that hazard once, and grant brief invulnerability.
