@@ -1,5 +1,5 @@
 // Deterministic, fixed-timestep endless-runner simulation. World units are pixels.
-export const STEP=1/120,PLAYER_X=150,BASE_SPEED=265,MAX_SPEED=455,GRAVITY=2200,JUMP_IMPULSE=600,LOW_HEIGHT=70,HOLD_TIME=.145,JUMP_BUFFER=.16,COYOTE_TIME=.10,GROUND_SINK=22;
+export const STEP=1/120,PLAYER_X=150,BASE_SPEED=265,MAX_SPEED=455,GRAVITY=2200,JUMP_IMPULSE=600,LOW_HEIGHT=70,HOLD_TIME=.145,JUMP_BUFFER=.16,COYOTE_TIME=.10;
 export const BIOMES=[['THE EMERALD WILDS','#73c897','#174e3d'],['CANOPY RUN','#5bb98d','#123e34'],['WATERFALL GORGE','#83cbd3','#24556a'],['LOST TEMPLE','#d6b978','#4c553c'],['MOONLIT JUNGLE','#797ac7','#161f4e'],['STORM FOREST','#708799','#172b37'],['VOLCANIC WILDS','#e98a58','#49262d'],['CHIMPION DREAMSCAPE','#d78bd0','#293066']];
 
 // Collision boxes intentionally sit inside the visual art for fair silhouettes.
@@ -27,11 +27,11 @@ export function targetSpeed(stage){return Math.min(MAX_SPEED,BASE_SPEED*(1+.065*
 export function speedAt(t){if(t<30)return BASE_SPEED;const s=stageAt(t),target=targetSpeed(s),previous=targetSpeed(s-1),phase=t%30;return previous+(target-previous)*(1-Math.exp(-phase/2.5))}
 export function flowMultiplier(flow){return flow>=100?5:flow>=80?3:flow>=60?2:flow>=40?1.5:flow>=20?1.25:1}
 export function createRun(options={}){const seed=(options.seed??hashSeed(`${Date.now()}-${Math.random()}`))>>>0;return{mode:options.mode||'normal',seed,seedState:seed,time:0,stage:1,stageChanged:0,distance:0,score:0,bonus:0,speed:BASE_SPEED,targetSpeed:BASE_SPEED,y:0,vy:0,jumpHeld:false,jumpAge:0,jumpBuffer:0,coyote:COYOTE_TIME,slideHeld:false,slideTime:0,slideMin:0,slideBlocked:false,playerState:'run',landing:0,obstacles:[],bananas:[],bananaCount:0,goldenBananas:0,spawnDistance:620,patternIndex:0,currentPattern:'intro',lastDifficulty:1,lastAction:'none',shield:false,invulnerable:0,shieldHit:0,shieldBreaks:0,power:null,nextPower:16,dead:false,passed:0,flow:0,maxFlow:0,combo:0,longestCombo:0,modeTime:0,perfectJumps:0,perfectSlides:0,nearMisses:0,notice:'TAP JUMP · HOLD HIGH · SLIDE LOW',noticeTime:4,event:null,nextEvent:78,splits:[],nextSplit:1,debug:false,shake:0,slowMo:0}}
-export function playerBox(r){const sliding=r.y===0&&(r.slideTime>0||r.slideHeld||r.slideBlocked);return{x:PLAYER_X-16,y:r.y+5-GROUND_SINK,w:32,h:sliding?31:78,sliding}}
+export function playerBox(r){const sliding=r.y===0&&(r.slideTime>0||r.slideHeld||r.slideBlocked);return{x:PLAYER_X-16,y:r.y+5,w:32,h:sliding?31:78,sliding}}
 const rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
-export const obstacleBoxes=o=>{const sink=['overhead','flex'].includes(o.family)?0:GROUND_SINK;return(o.boxes||[[0,0,o.w,o.h]]).map(b=>({x:o.x+b[0],y:b[1]-sink,w:b[2],h:b[3]}))};
+export const obstacleBoxes=o=>(o.boxes||[[0,0,o.w,o.h]]).map(b=>({x:o.x+b[0],y:b[1],w:b[2],h:b[3]}));
 export function collides(r,o){if(r.invulnerable>0||o.resolved==='hit')return false;const p=playerBox(r);return obstacleBoxes(o).some(b=>rectHit(p,b))}
-function overheadBlocksStand(r){const stand={x:PLAYER_X-16,y:5-GROUND_SINK,w:32,h:78};return r.obstacles.some(o=>['overhead','flex'].includes(o.family)&&o.resolved!=='hit'&&obstacleBoxes(o).some(b=>rectHit(stand,b)))}
+function overheadBlocksStand(r){const stand={x:PLAYER_X-16,y:5,w:32,h:78};return r.obstacles.some(o=>['overhead','flex'].includes(o.family)&&o.resolved!=='hit'&&obstacleBoxes(o).some(b=>rectHit(stand,b)))}
 export function jump(r){if(r.dead)return false;if(r.y===0||r.coyote>0){r.slideHeld=false;r.slideTime=0;r.slideBlocked=false;r.vy=JUMP_IMPULSE;r.jumpHeld=true;r.jumpAge=0;r.jumpBuffer=0;r.playerState='jump-ascend';return true}r.jumpBuffer=JUMP_BUFFER;return false}
 export function releaseJump(r){if(r.jumpHeld&&r.jumpAge<HOLD_TIME&&r.vy>0)r.vy=Math.min(r.vy,Math.sqrt(Math.max(0,2*GRAVITY*(LOW_HEIGHT-r.y))));r.jumpHeld=false}
 export function slide(r,held=true){if(r.dead)return false;r.slideHeld=held;if(held&&r.y===0){r.slideMin=Math.max(r.slideMin,.24);r.slideTime=Math.max(r.slideTime,.24);r.playerState='slide-enter';return true}return false}
