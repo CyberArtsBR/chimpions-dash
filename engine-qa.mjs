@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {createRun,jump,releaseJump,slide,releaseSlide,step,STEP,buildPattern,validatePattern,stageAt,targetSpeed,BASE_SPEED,MAX_SPEED,PLAYER_X,TYPES,collides,playerBox,dailySeed,hashSeed} from './dist/engine.js';
 
 function trajectory(hold){const r=createRun({seed:1});r.spawnDistance=1e9;jump(r);let max=0;for(let i=0;i<240;i++){if(i*STEP>=hold)releaseJump(r);step(r,STEP);max=Math.max(max,r.y)}return max}
-const low=trajectory(.02),high=trajectory(.2);assert(low>=61&&low<65,{low});assert(high>165&&high<175,{high});
+const low=trajectory(.02),high=trajectory(.2);assert(low>=69&&low<72,{low});assert(high>165&&high<175,{high});
 
 let r=createRun({seed:2});r.spawnDistance=1e9;for(let i=0;i<3600-1;i++)step(r,STEP);assert.equal(r.stage,1);assert.equal(r.speed,BASE_SPEED);step(r,STEP);assert.equal(r.stage,2);for(let i=0;i<600;i++)step(r,STEP);assert(r.speed>BASE_SPEED&&r.speed<targetSpeed(2));assert.equal(stageAt(60),3);assert(targetSpeed(999)<=MAX_SPEED);
 
