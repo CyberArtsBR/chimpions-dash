@@ -26,7 +26,8 @@ Serve `dist/` over HTTP and open `index.html`.
 - Data-driven short, tall, wide and overhead hazards are assembled by a seeded encounter director. Early low-hop/high-jump pairs use wider recovery timing.
 - Sliding has a minimum useful duration, restores the compact ducking pose, and will not force the standing hitbox into an overhead hazard.
 - Every trap family and banana uses the original 2D obstacle atlas, with visible fallbacks if an asset cannot load.
-- The scenery, hazards and characters remain deliberately 2D, with a shallow scrolling grass-and-soil foreground instead of a tall lower panel.
+- The scenery, hazards and characters remain deliberately 2D, with a detailed high-resolution pixel-art grass foreground instead of a flat lower panel.
+- Each NFT portrait is tightly cropped to the head inside a translucent glass helmet with a pixel-metal collar attached to the runner body.
 - Bananas, rare Golden Bananas, Perfect actions and Near Misses build Flow. Maximum Flow activates eight seconds of Chimpion Mode.
 - Shields absorb one hit, resolve that hazard once, and grant brief invulnerability.
 - Eight repeating biome treatments blend without loading screens; later stages add deterministic environmental events.
