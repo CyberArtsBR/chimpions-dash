@@ -50,6 +50,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Install image recovery tool
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
       - name: Recover original top-row obstacle art
         shell: bash
         run: |
