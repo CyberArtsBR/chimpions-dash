@@ -33,83 +33,88 @@ export function createRenderer(canvas){
  function randFactory(seed=0x51f15e){let s=seed>>>0;return()=>{s=Math.imul(s^s>>>15,1|s);s^=s+Math.imul(s^s>>>7,61|s);return((s^s>>>14)>>>0)/4294967296}}
 
  function makeGroundTile(){
-  const c=document.createElement('canvas');c.width=640;c.height=96;
+  const c=document.createElement('canvas');c.width=720;c.height=104;
   const g=c.getContext?.('2d');if(!g)return c;
   g.imageSmoothingEnabled=false;
-  const rnd=randFactory(0xC11A0);
+  const rnd=randFactory(0x7A11C0);
   const R=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))};
 
-  // Ground surface is y=34 inside this tile. Everything above it is foliage,
-  // everything below it is lush hanging moss / dark jungle soil.
-  R(0,34,640,62,'#0a2318');
-  R(0,45,640,51,'#0d2b1c');
-  R(0,70,640,26,'#091f16');
+  // Fresh ground built from scratch to match the lush reference:
+  // irregular bright turf at the gameplay surface, leafy clumps above,
+  // hanging moss and dark jungle soil below. No neon stripe / barcode pattern.
+  const SURFACE=50;
+  R(0,SURFACE,720,54,'#092218');
+  R(0,SURFACE+8,720,46,'#0c2b1c');
+  R(0,SURFACE+28,720,26,'#081d15');
 
-  // Organic soil texture: subtle mottled stones/roots, never bright bars.
-  const soilCols=['#173a22','#204629','#285030','#11301f','#35563a'];
-  for(let i=0;i<190;i++){
-   const x=rnd()*640,y=42+rnd()*52,w=1+Math.floor(rnd()*6),h=1+Math.floor(rnd()*4);
-   R(x,y,w,h,soilCols[Math.floor(rnd()*soilCols.length)]);
+  // Dark mottled soil.
+  const soil=['#153823','#1d4227','#244b2c','#10301f','#2d5332'];
+  for(let i=0;i<260;i++){
+   const x=Math.floor(rnd()*720),y=SURFACE+7+Math.floor(rnd()*46);
+   R(x,y,1+Math.floor(rnd()*6),1+Math.floor(rnd()*4),soil[Math.floor(rnd()*soil.length)]);
   }
 
-  // Hanging moss under the turf, based on the user's reference screenshot.
-  for(let x=0;x<640;x+=3){
-   const n=rnd(),len=6+Math.floor(rnd()*28),w=n>.76?2:1;
-   const col=n>.70?'#2c7c32':n>.38?'#22682d':'#194f28';
-   R(x,36,w,len,col);
-   if(rnd()>.78)R(x+1,40+len,1,3+Math.floor(rnd()*9),'#123e22');
+  // Natural hanging moss, placed randomly rather than in regular bars.
+  for(let i=0;i<150;i++){
+   const x=Math.floor(rnd()*720),len=4+Math.floor(rnd()*25);
+   const col=rnd()>.62?'#2b7b31':rnd()>.28?'#205f2b':'#174a25';
+   R(x,SURFACE+2,1+(rnd()>.83?1:0),len,col);
+   if(rnd()>.76)R(x+(rnd()>.5?1:-1),SURFACE+len-1,1,3+Math.floor(rnd()*7),'#123d22');
   }
 
-  // Irregular bright turf. Avoid a single neon horizontal line.
-  for(let x=0;x<640;x+=2){
-   const top=29-Math.floor(rnd()*5);
-   const h=8+Math.floor(rnd()*4);
-   R(x,top,2,h,'#327b31');
-   R(x,top+1,2,Math.max(2,h-4),'#4da536');
-   if(rnd()>.30)R(x,top,2,2,'#75d13f');
-   if(rnd()>.65)R(x+1,top-1,1,2,'#a1ec4d');
+  // Dense irregular turf. Lots of tiny overlapping pixels, no straight band.
+  const grass=['#2f812f','#3e9b33','#55b637','#70cf3e','#8fe245','#a4eb4b'];
+  for(let i=0;i<620;i++){
+   const x=Math.floor(rnd()*720),len=2+Math.floor(rnd()*8),w=rnd()>.72?2:1;
+   const top=SURFACE-Math.floor(rnd()*6);
+   R(x,top-len,w,len+2,grass[Math.floor(rnd()*grass.length)]);
+   if(rnd()>.68)R(x+(rnd()>.5?1:-1),top-len,1,2,grass[4+Math.floor(rnd()*2)]);
   }
 
-  // Small blades along the entire surface.
-  for(let x=0;x<640;x+=4){
-   const len=3+Math.floor(rnd()*8),lean=rnd()>.5?1:-1;
-   const col=rnd()>.6?'#8fe346':rnd()>.3?'#64c63a':'#429d33';
-   R(x,29-len,1,len,col);
-   if(len>6)R(x+lean,29-len,1,3,col);
+  // Small moss/leaf pixels across the turf crown.
+  for(let i=0;i<260;i++){
+   const x=Math.floor(rnd()*720),y=SURFACE-8+Math.floor(rnd()*9);
+   R(x,y,1+(rnd()>.8?1:0),1,rnd()>.55?'#8cdd43':'#4aa536');
   }
 
-  // Hand-built fern clumps: much closer to the lush reference art.
-  const fern=(cx,base,scale=1)=>{
-   const dark='#1e6b2b',mid='#329436',light='#5fc23a',hi='#82dc42';
-   R(cx,base-22*scale,2,22*scale,dark);
-   for(let i=0;i<6;i++){
-    const y=base-(4+i*3.1)*scale,reach=(7+i*2.3)*scale;
-    R(cx-reach,y,reach,2*scale,mid);
-    R(cx+2,y+1*scale,reach,2*scale,mid);
+  function fern(cx,base,scale=1){
+   const stem='#1f672a',mid='#329335',light='#58b83a',hi='#79d441';
+   R(cx,base-24*scale,2,24*scale,stem);
+   for(let k=0;k<6;k++){
+    const y=base-(5+k*3.3)*scale,reach=(7+k*2.0)*scale;
+    // left leaf
+    R(cx-reach,y,reach-1,2*scale,mid);
     R(cx-reach-2*scale,y-2*scale,4*scale,2*scale,light);
+    // right leaf
+    R(cx+2,y+1*scale,reach-1,2*scale,mid);
     R(cx+reach-1*scale,y-1*scale,4*scale,2*scale,light);
-    if(i>2){R(cx-reach*.65,y-3*scale,4*scale,2*scale,hi);R(cx+reach*.45,y-2*scale,4*scale,2*scale,hi)}
+    if(k>2){
+     R(cx-reach*.62,y-3*scale,4*scale,1.5*scale,hi);
+     R(cx+reach*.42,y-2*scale,4*scale,1.5*scale,hi);
+    }
    }
-  };
-  const tuft=(cx,base,scale=1)=>{
-   const cols=['#27782e','#3b9d33','#5cbd38','#7cda42'];
-   for(let i=-4;i<=4;i++){
-    const len=(6+(4-Math.abs(i))*2+rnd()*5)*scale;
-    const x=cx+i*2*scale,col=cols[(i+8)%cols.length];
-    R(x,base-len,2*scale,len,col);
-    if(i%2===0)R(x+(i<0?-2:2)*scale,base-len+3*scale,3*scale,2*scale,col);
-   }
-  };
-
-  fern(56,29,.78);tuft(110,29,.72);fern(184,29,.58);
-  tuft(270,29,.76);fern(344,29,.86);tuft(418,29,.62);
-  fern(500,29,.68);tuft(573,29,.86);
-
-  // Tiny scattered moss highlights.
-  for(let i=0;i<115;i++){
-   const x=rnd()*640,y=24+rnd()*14;
-   R(x,y,1+(rnd()>.7?1:0),1,rnd()>.5?'#72d43d':'#459f34');
   }
+
+  function tuft(cx,base,scale=1){
+   const cols=['#236f2c','#328b31','#47a934','#63c439','#7bd640'];
+   for(let k=-4;k<=4;k++){
+    const len=(6+(4-Math.abs(k))*2+rnd()*7)*scale;
+    const x=cx+k*2.1*scale,col=cols[(k+8)%cols.length];
+    R(x,base-len,1.5*scale,len,col);
+    if(k%2===0)R(x+(k<0?-2:2)*scale,base-len+3*scale,3*scale,1.5*scale,col);
+   }
+  }
+
+  // Reference-like foliage clumps with intentionally uneven spacing.
+  fern(58,SURFACE,.78);
+  tuft(122,SURFACE,.75);
+  fern(206,SURFACE,.58);
+  tuft(298,SURFACE,.72);
+  fern(385,SURFACE,.88);
+  tuft(468,SURFACE,.62);
+  fern(548,SURFACE,.66);
+  tuft(650,SURFACE,.82);
+
   return c
  }
  const groundTile=makeGroundTile();
@@ -146,9 +151,10 @@ export function createRenderer(canvas){
  }
 
  function ground(vw,h,run){
-  ctx.fillStyle='#092117';ctx.fillRect(0,0,vw,h);
-  const tileW=640,tileH=96,offset=(run.distance*82)%tileW;
-  for(let x=-tileW;x<vw+tileW;x+=tileW)ctx.drawImage(groundTile,x-offset,-34,tileW,tileH)
+  ctx.fillStyle='#082116';ctx.fillRect(0,0,vw,h);
+  const tileW=720,tileH=104,offset=(run.distance*100)%tileW;
+  // Tile SURFACE is y=50, so drawing at -50 makes the grass crown meet gameplay y=0.
+  for(let x=-tileW;x<vw+tileW;x+=tileW)ctx.drawImage(groundTile,x-offset,-50,tileW,tileH)
  }
 
  function pxRect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))}
@@ -206,52 +212,13 @@ export function createRenderer(canvas){
  }
 
  function bananaBunch(x,y,golden=false){
-  ctx.save();ctx.translate(x,y);
-  if(golden){ctx.shadowColor='#fff39a';ctx.shadowBlur=13}
-  ctx.lineJoin='round';ctx.lineCap='round';
-
-  const drawOne=(tx,ty,rot,scale)=>{
-   ctx.save();ctx.translate(tx,ty);ctx.rotate(rot);ctx.scale(scale,scale);
-   // Thick dark/orange outline.
-   ctx.beginPath();
-   ctx.moveTo(-9,-10);
-   ctx.bezierCurveTo(-13,-2,-11,8,-3,11);
-   ctx.bezierCurveTo(5,14,12,8,14,1);
-   ctx.bezierCurveTo(9,6,4,6,0,3);
-   ctx.bezierCurveTo(-4,0,-5,-5,-4,-9);
-   ctx.closePath();
-   ctx.fillStyle='#6d3510';ctx.fill();
-
-   // Golden banana body.
-   ctx.beginPath();
-   ctx.moveTo(-7,-8);
-   ctx.bezierCurveTo(-10,-1,-8,6,-2,8);
-   ctx.bezierCurveTo(4,11,9,7,11,3);
-   ctx.bezierCurveTo(7,6,3,5,0,3);
-   ctx.bezierCurveTo(-3,1,-4,-4,-3,-7);
-   ctx.closePath();
-   ctx.fillStyle=golden?'#ffe34e':'#ffc72d';ctx.fill();
-
-   // Warm lower shade and bright upper highlight.
-   ctx.strokeStyle='#dd8b12';ctx.lineWidth=2;
-   ctx.beginPath();ctx.moveTo(-6,2);ctx.bezierCurveTo(-3,8,4,9,9,5);ctx.stroke();
-   ctx.strokeStyle=golden?'#fff8a6':'#ffe977';ctx.lineWidth=2;
-   ctx.beginPath();ctx.moveTo(-5,-5);ctx.bezierCurveTo(-6,-1,-4,2,-1,4);ctx.stroke();
-
-   // Tip.
-   ctx.fillStyle='#5b2e11';ctx.fillRect(-9,-11,4,3);
-   ctx.restore()
-  };
-
-  // Three overlapping curved bananas, matching the clean bunch in the reference.
-  drawOne(-8,2,-.34,.92);
-  drawOne(0,-1,-.12,1);
-  drawOne(8,2,.13,.88);
-
-  // Shared stem.
-  ctx.fillStyle='#5b3514';ctx.fillRect(-2,-15,5,6);
-  ctx.fillStyle='#8f5b18';ctx.fillRect(-1,-16,3,4);
-  ctx.fillStyle='#d38e22';ctx.fillRect(0,-16,2,2);
+  ctx.save();
+  ctx.translate(x,y);
+  if(golden){ctx.shadowColor='#fff59a';ctx.shadowBlur=13}
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.font='32px "Segoe UI Emoji","Noto Color Emoji","Apple Color Emoji",sans-serif';
+  ctx.fillText('🍌',0,0);
   ctx.restore()
  }
 
