@@ -14,17 +14,18 @@ Serve `dist/` over HTTP and open `index.html`.
 ## Architecture
 
 - `dist/engine.js` — deterministic 120 Hz simulation, player controller, staged speed curve, collision, encounter director, scoring, Flow, shield and seeded runs.
-- `dist/render.js` — high-DPI canvas renderer, animated body/head composition, biome blending, parallax, terrain, hazards, weather and debug hitboxes.
+- `dist/render.js` — high-DPI 2D canvas renderer, animated body/NFT bubble composition, biome blending, parallax, terrain, hazards, weather and debug hitboxes.
 - `dist/app.js` — UI state machine, input handling, collection UI, save migration, achievements, Daily Jungle, best-run pacing and share cards.
 - `dist/audio.js` — gesture-gated procedural Web Audio effects, including monkey jump hoots.
 - `dist/collection.json` — 221 unique official names, IDs, image paths and tribes cached on 2026-09-08. No pricing or ownership data.
-- `dist/assets/heads/` — derived transparent gameplay head assets. Original cached portraits remain unchanged.
+- `dist/assets/chimp-*.webp` — locally cached NFT portraits used for the original circular player-head crop and collection selector.
 
 ## Gameplay systems
 
 - Stage 1 remains at the base pace for its full first 30 seconds. A new stage starts every 30 active seconds and eases toward a soft-capped target speed.
 - Data-driven short, tall, wide and overhead hazards are assembled by a seeded encounter director. Early low-hop/high-jump pairs use wider recovery timing.
-- Sliding has a minimum useful duration and will not force the standing hitbox into an overhead hazard.
+- Sliding has a minimum useful duration, a dedicated feet-first ground-slide pose, and will not force the standing hitbox into an overhead hazard.
+- The scenery, hazards and characters remain deliberately 2D, with a shallow scrolling grass-and-soil foreground instead of a tall lower panel.
 - Bananas, rare Golden Bananas, Perfect actions and Near Misses build Flow. Maximum Flow activates eight seconds of Chimpion Mode.
 - Shields absorb one hit, resolve that hazard once, and grant brief invulnerability.
 - Eight repeating biome treatments blend without loading screens; later stages add deterministic environmental events.
