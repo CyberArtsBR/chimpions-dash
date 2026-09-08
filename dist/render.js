@@ -8,14 +8,12 @@ const mix=(a,b,t)=>{const A=a.match(/\w\w/g).map(x=>parseInt(x,16)),B=b.match(/\
 
 const PLAYER_VISUAL_DROP=6;
 const HAZARD_VISUAL_DROP=6;
-const BANANA_SPRITE_DATA='data:image/webp;base64,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';
 
 export function createRenderer(canvas){
  const ctx=canvas.getContext('2d'),
   jungle=asset('assets/jungle-v2.webp'),
   bodies=asset('assets/body-atlas.webp'),
-  objects=asset('assets/obstacles-atlas-recovered.png?v=6'),
-  bananaSprite=asset(BANANA_SPRITE_DATA);
+  objects=asset('assets/obstacles-atlas-recovered.png?v=6');
  let current=null;
 
  const redraw=()=>current&&draw(...current);onLoad=redraw;
@@ -33,74 +31,84 @@ export function createRenderer(canvas){
  }
 
  function randFactory(seed=0x51f15e){let s=seed>>>0;return()=>{s=Math.imul(s^s>>>15,1|s);s^=s+Math.imul(s^s>>>7,61|s);return((s^s>>>14)>>>0)/4294967296}}
+
  function makeGroundTile(){
-  const c=document.createElement('canvas');c.width=920;c.height=112;
+  const c=document.createElement('canvas');c.width=640;c.height=96;
   const g=c.getContext?.('2d');if(!g)return c;
   g.imageSmoothingEnabled=false;
   const rnd=randFactory(0xC11A0);
-  const rect=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))};
+  const R=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))};
 
-  // Deep jungle soil: layered, irregular and dark enough to keep gameplay silhouettes readable.
-  rect(0,18,920,94,'#0b2419');
-  rect(0,23,920,89,'#12331f');
-  rect(0,31,920,81,'#173a23');
-  rect(0,49,920,63,'#12301e');
-  rect(0,78,920,34,'#0b2318');
+  // Ground surface is y=34 inside this tile. Everything above it is foliage,
+  // everything below it is lush hanging moss / dark jungle soil.
+  R(0,34,640,62,'#0a2318');
+  R(0,45,640,51,'#0d2b1c');
+  R(0,70,640,26,'#091f16');
 
-  // Buried stones, roots and mottled earth.
-  for(let i=0;i<145;i++){
-   const x=Math.floor(rnd()*920),y=34+Math.floor(rnd()*77),w=2+Math.floor(rnd()*9),h=2+Math.floor(rnd()*5);
-   const cols=['#244a2a','#1d4026','#315631','#102b1d','#49603d'];
-   rect(x,y,w,h,cols[Math.floor(rnd()*cols.length)]);
-  }
-  for(let i=0;i<38;i++){
-   const x=Math.floor(rnd()*920),y=31+Math.floor(rnd()*55),len=10+Math.floor(rnd()*30);
-   const col=rnd()>.55?'#315b2e':'#234827';
-   rect(x,y,2,len,col);
-   if(rnd()>.45)rect(x-4,y+Math.floor(len*.55),6,2,col);
-   if(rnd()>.55)rect(x+1,y+Math.floor(len*.75),7,2,col);
+  // Organic soil texture: subtle mottled stones/roots, never bright bars.
+  const soilCols=['#173a22','#204629','#285030','#11301f','#35563a'];
+  for(let i=0;i<190;i++){
+   const x=rnd()*640,y=42+rnd()*52,w=1+Math.floor(rnd()*6),h=1+Math.floor(rnd()*4);
+   R(x,y,w,h,soilCols[Math.floor(rnd()*soilCols.length)]);
   }
 
-  // Dense hanging moss under the turf.
-  for(let x=0;x<920;x+=5){
-   const h=4+Math.floor(rnd()*14);
-   rect(x,18,3,h,rnd()>.5?'#2d7e32':'#24672c');
-   if(rnd()>.68)rect(x+2,20+h,2,3+Math.floor(rnd()*8),'#184c27');
+  // Hanging moss under the turf, based on the user's reference screenshot.
+  for(let x=0;x<640;x+=3){
+   const n=rnd(),len=6+Math.floor(rnd()*28),w=n>.76?2:1;
+   const col=n>.70?'#2c7c32':n>.38?'#22682d':'#194f28';
+   R(x,36,w,len,col);
+   if(rnd()>.78)R(x+1,40+len,1,3+Math.floor(rnd()*9),'#123e22');
   }
 
-  // Luminous pixel-grass edge, matching the original high-detail foreground reference.
-  rect(0,15,920,5,'#377f31');
-  rect(0,12,920,4,'#55ad38');
-  rect(0,9,920,4,'#7bd53f');
-  rect(0,7,920,3,'#a2ed4a');
-  rect(0,6,920,2,'#c0f35c');
-
-  // Small grass blades across the whole top.
-  for(let x=-4;x<924;x+=4){
-   const h=3+Math.floor(rnd()*10),lean=rnd()>.5?2:-2;
-   const col=['#4ba933','#65c33a','#82de42','#a0eb4b'][Math.floor(rnd()*4)];
-   rect(x,7-h,2,h,col);
-   if(h>7)rect(x+lean,7-h,2,3,col);
+  // Irregular bright turf. Avoid a single neon horizontal line.
+  for(let x=0;x<640;x+=2){
+   const top=29-Math.floor(rnd()*5);
+   const h=8+Math.floor(rnd()*4);
+   R(x,top,2,h,'#327b31');
+   R(x,top+1,2,Math.max(2,h-4),'#4da536');
+   if(rnd()>.30)R(x,top,2,2,'#75d13f');
+   if(rnd()>.65)R(x+1,top-1,1,2,'#a1ec4d');
   }
 
-  // Larger foreground foliage clumps.
-  for(let i=0;i<37;i++){
-   const cx=6+Math.floor(rnd()*908),base=8,scale=.7+rnd()*.75;
-   const dark='#24732d',mid='#42a937',bright='#78d93f',hi='#9ded4b';
-   for(let leaf=0;leaf<5;leaf++){
-    const dir=leaf-2,lh=Math.round((8+Math.abs(dir)*2+rnd()*9)*scale),lx=cx+dir*3;
-    rect(lx,base-lh,2,lh,dark);
-    rect(lx+(dir<0?-3:2),base-lh+3,4,2,mid);
-    if(leaf%2===0)rect(lx+(dir<0?-5:3),base-lh+6,5,2,bright);
-    if(rnd()>.5)rect(lx,base-lh,2,3,hi);
+  // Small blades along the entire surface.
+  for(let x=0;x<640;x+=4){
+   const len=3+Math.floor(rnd()*8),lean=rnd()>.5?1:-1;
+   const col=rnd()>.6?'#8fe346':rnd()>.3?'#64c63a':'#429d33';
+   R(x,29-len,1,len,col);
+   if(len>6)R(x+lean,29-len,1,3,col);
+  }
+
+  // Hand-built fern clumps: much closer to the lush reference art.
+  const fern=(cx,base,scale=1)=>{
+   const dark='#1e6b2b',mid='#329436',light='#5fc23a',hi='#82dc42';
+   R(cx,base-22*scale,2,22*scale,dark);
+   for(let i=0;i<6;i++){
+    const y=base-(4+i*3.1)*scale,reach=(7+i*2.3)*scale;
+    R(cx-reach,y,reach,2*scale,mid);
+    R(cx+2,y+1*scale,reach,2*scale,mid);
+    R(cx-reach-2*scale,y-2*scale,4*scale,2*scale,light);
+    R(cx+reach-1*scale,y-1*scale,4*scale,2*scale,light);
+    if(i>2){R(cx-reach*.65,y-3*scale,4*scale,2*scale,hi);R(cx+reach*.45,y-2*scale,4*scale,2*scale,hi)}
    }
-  }
+  };
+  const tuft=(cx,base,scale=1)=>{
+   const cols=['#27782e','#3b9d33','#5cbd38','#7cda42'];
+   for(let i=-4;i<=4;i++){
+    const len=(6+(4-Math.abs(i))*2+rnd()*5)*scale;
+    const x=cx+i*2*scale,col=cols[(i+8)%cols.length];
+    R(x,base-len,2*scale,len,col);
+    if(i%2===0)R(x+(i<0?-2:2)*scale,base-len+3*scale,3*scale,2*scale,col);
+   }
+  };
 
-  // Tiny vine curls and bright moss pixels for the "high resolution pixel art" finish.
-  for(let i=0;i<90;i++){
-   const x=Math.floor(rnd()*920),y=10+Math.floor(rnd()*22);
-   rect(x,y,2,2,rnd()>.45?'#73d63c':'#3d9934');
-   if(rnd()>.7)rect(x+2,y-2,2,4,'#8ee444');
+  fern(56,29,.78);tuft(110,29,.72);fern(184,29,.58);
+  tuft(270,29,.76);fern(344,29,.86);tuft(418,29,.62);
+  fern(500,29,.68);tuft(573,29,.86);
+
+  // Tiny scattered moss highlights.
+  for(let i=0;i<115;i++){
+   const x=rnd()*640,y=24+rnd()*14;
+   R(x,y,1+(rnd()>.7?1:0),1,rnd()>.5?'#72d43d':'#459f34');
   }
   return c
  }
@@ -138,9 +146,9 @@ export function createRenderer(canvas){
  }
 
  function ground(vw,h,run){
-  ctx.fillStyle='#0a2118';ctx.fillRect(0,0,vw,h);
-  const tileW=920,offset=(run.distance*82)%tileW;
-  for(let x=-tileW;x<vw+tileW;x+=tileW)ctx.drawImage(groundTile,x-offset,-18,tileW,112)
+  ctx.fillStyle='#092117';ctx.fillRect(0,0,vw,h);
+  const tileW=640,tileH=96,offset=(run.distance*82)%tileW;
+  for(let x=-tileW;x<vw+tileW;x+=tileW)ctx.drawImage(groundTile,x-offset,-34,tileW,tileH)
  }
 
  function pxRect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)))}
@@ -197,25 +205,54 @@ export function createRenderer(canvas){
   fallbackObstacle(o,overhead,drop)
  }
 
- function drawBananaSprite(x,y,golden=false){
-  if(!ready(bananaSprite))return false;
-  ctx.save();
-  if(golden){ctx.shadowColor='#fff59a';ctx.shadowBlur=14;ctx.globalAlpha=.99}
-  ctx.drawImage(bananaSprite,x-17,y-16,34,32);
-  if(golden){ctx.globalCompositeOperation='screen';ctx.fillStyle='#fff2a233';ctx.fillRect(x-15,y-14,30,28)}
-  ctx.restore();return true
- }
-
  function bananaBunch(x,y,golden=false){
-  ctx.save();ctx.translate(x,y);if(golden){ctx.shadowColor='#fff59a';ctx.shadowBlur=12}
-  const outline='#6d3a12',yellow=golden?'#ffe45b':'#ffc62f',light=golden?'#fff39a':'#ffe46a',dark='#d99517';
-  const one=(ox,oy,flip=1)=>{
-   ctx.save();ctx.translate(ox,oy);ctx.scale(flip,1);
-   ctx.fillStyle=outline;ctx.beginPath();ctx.moveTo(-10,-8);ctx.lineTo(-5,-11);ctx.lineTo(2,-8);ctx.lineTo(8,-2);ctx.lineTo(8,4);ctx.lineTo(3,8);ctx.lineTo(-4,7);ctx.lineTo(-9,2);ctx.closePath();ctx.fill();
-   ctx.fillStyle=yellow;ctx.beginPath();ctx.moveTo(-7,-7);ctx.lineTo(-3,-8);ctx.lineTo(2,-6);ctx.lineTo(5,-1);ctx.lineTo(5,3);ctx.lineTo(2,5);ctx.lineTo(-3,4);ctx.lineTo(-7,0);ctx.closePath();ctx.fill();
-   pxRect(-4,-6,5,2,light);pxRect(2,2,3,2,dark);pxRect(-9,-10,3,4,outline);ctx.restore()
+  ctx.save();ctx.translate(x,y);
+  if(golden){ctx.shadowColor='#fff39a';ctx.shadowBlur=13}
+  ctx.lineJoin='round';ctx.lineCap='round';
+
+  const drawOne=(tx,ty,rot,scale)=>{
+   ctx.save();ctx.translate(tx,ty);ctx.rotate(rot);ctx.scale(scale,scale);
+   // Thick dark/orange outline.
+   ctx.beginPath();
+   ctx.moveTo(-9,-10);
+   ctx.bezierCurveTo(-13,-2,-11,8,-3,11);
+   ctx.bezierCurveTo(5,14,12,8,14,1);
+   ctx.bezierCurveTo(9,6,4,6,0,3);
+   ctx.bezierCurveTo(-4,0,-5,-5,-4,-9);
+   ctx.closePath();
+   ctx.fillStyle='#6d3510';ctx.fill();
+
+   // Golden banana body.
+   ctx.beginPath();
+   ctx.moveTo(-7,-8);
+   ctx.bezierCurveTo(-10,-1,-8,6,-2,8);
+   ctx.bezierCurveTo(4,11,9,7,11,3);
+   ctx.bezierCurveTo(7,6,3,5,0,3);
+   ctx.bezierCurveTo(-3,1,-4,-4,-3,-7);
+   ctx.closePath();
+   ctx.fillStyle=golden?'#ffe34e':'#ffc72d';ctx.fill();
+
+   // Warm lower shade and bright upper highlight.
+   ctx.strokeStyle='#dd8b12';ctx.lineWidth=2;
+   ctx.beginPath();ctx.moveTo(-6,2);ctx.bezierCurveTo(-3,8,4,9,9,5);ctx.stroke();
+   ctx.strokeStyle=golden?'#fff8a6':'#ffe977';ctx.lineWidth=2;
+   ctx.beginPath();ctx.moveTo(-5,-5);ctx.bezierCurveTo(-6,-1,-4,2,-1,4);ctx.stroke();
+
+   // Tip.
+   ctx.fillStyle='#5b2e11';ctx.fillRect(-9,-11,4,3);
+   ctx.restore()
   };
-  one(-5,2,1);one(2,-1,1);one(7,3,-1);pxRect(1,-11,3,5,outline);ctx.restore()
+
+  // Three overlapping curved bananas, matching the clean bunch in the reference.
+  drawOne(-8,2,-.34,.92);
+  drawOne(0,-1,-.12,1);
+  drawOne(8,2,.13,.88);
+
+  // Shared stem.
+  ctx.fillStyle='#5b3514';ctx.fillRect(-2,-15,5,6);
+  ctx.fillStyle='#8f5b18';ctx.fillRect(-1,-16,3,4);
+  ctx.fillStyle='#d38e22';ctx.fillRect(0,-16,2,2);
+  ctx.restore()
  }
 
  function character(state,run,selected){
@@ -239,7 +276,7 @@ export function createRenderer(canvas){
   ctx.save();ctx.translate(0,groundY);ctx.scale(scale,scale);ground(vw,h/scale,run);
   if(active){
    for(const o of run.obstacles)obstacle(o);
-   for(const b of run.bananas){if(!drawBananaSprite(b.x,-b.y,b.golden)){ctx.save();if(b.golden){ctx.shadowColor='#fff59a';ctx.shadowBlur=15;ctx.globalAlpha=.98}bananaBunch(b.x,-b.y,b.golden);ctx.restore()}}
+   for(const b of run.bananas)bananaBunch(b.x,-b.y,b.golden)
    if(run.power){ctx.save();ctx.shadowColor='#a5ffe4';ctx.shadowBlur=14;ctx.font='30px serif';ctx.textAlign='center';ctx.fillText('🛡️',run.power.x,-run.power.y+12);ctx.restore()}
    character(state,run,selected);
    for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/.4);ctx.fillStyle=p.color||'#d0dca0';if(p.label){ctx.font='bold 18px monospace';ctx.fillText(p.label,p.x,-p.y)}else ctx.fillRect(p.x,-p.y,p.size||4,p.size||4)}
