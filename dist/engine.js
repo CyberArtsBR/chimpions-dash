@@ -50,7 +50,7 @@ function patternCatalog(stage){const early=stage<=2,late=stage>=5;return[
  {id:'stage-one-long-jump',difficulty:2,weight:stage===1?2.1:0,items:[['wide',0]],recovery:1.04},
  {id:'high-wall',difficulty:2,weight:stage>1?3:0,items:[['high',0]],recovery:.95},
  {id:'wide-leap',difficulty:2,weight:stage===1?1.4:3.2,items:[['wide',0]],recovery:1.03},
- {id:'duck-under',difficulty:2,weight:stage>1?(late?6.0:4.0):1.2,items:[['overhead',0]],recovery:late?.72:.78},
+ {id:'duck-under',difficulty:2,weight:stage>1?(late?6.0:4.0):0,items:[['overhead',0]],recovery:late?.72:.78},
  {id:'choice-line',difficulty:3,weight:stage>3?2.1:0,items:[['flex',0]],recovery:.82},
  {id:'quick-hop-high',difficulty:3,weight:stage>1?2.4:0,items:[['short',0],['high',early?1.12:.88]],recovery:.98},
  {id:'duck-then-hop',difficulty:3,weight:stage>2?2.8:0,items:[['overhead',0],['short',early?1.05:.84]],recovery:.92},

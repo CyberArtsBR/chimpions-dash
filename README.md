@@ -16,7 +16,7 @@ Serve `dist/` over HTTP and open `index.html`.
 - `dist/engine.js` — deterministic 120 Hz simulation, player controller, staged speed curve, collision, encounter director, scoring, Flow, shield and seeded runs.
 - `dist/render.js` — high-DPI 2D canvas renderer, animated body/NFT bubble composition, biome blending, parallax, terrain, hazards, weather and debug hitboxes.
 - `dist/app.js` — UI state machine, input handling, collection UI, save migration, achievements, Daily Jungle, best-run pacing and share cards.
-- `dist/audio.js` — gesture-gated procedural Web Audio effects, including monkey jump hoots.
+- `dist/audio.js` — gesture-gated Web Audio effects plus the looping background-music player and slide/dash loop.
 - `dist/collection.json` — 221 unique official names, IDs, image paths and tribes cached on 2026-09-08. No pricing or ownership data.
 - `dist/assets/chimp-*.webp` — locally cached NFT portraits used for the original circular player-head crop and collection selector.
 
@@ -25,7 +25,7 @@ Serve `dist/` over HTTP and open `index.html`.
 - Stage 1 remains at the base pace for its full first 30 seconds. A new stage starts every 30 active seconds and eases toward a soft-capped target speed.
 - Data-driven short, tall, wide and overhead hazards are assembled by a seeded encounter director. Early low-hop/high-jump pairs use wider recovery timing.
 - Sliding has a minimum useful duration, restores the compact ducking pose, and will not force the standing hitbox into an overhead hazard.
-- Every trap family and banana uses the original 2D obstacle atlas, with visible fallbacks if an asset cannot load.
+- Every active trap family and banana uses a dedicated transparent PNG in `assets/sprites-clean/`, with collider-sized fallbacks if an asset cannot load.
 - The scenery, hazards and characters remain deliberately 2D, with a detailed high-resolution pixel-art grass foreground instead of a flat lower panel.
 - Each NFT portrait is tightly cropped to the head inside a translucent glass helmet with a pixel-metal collar attached to the runner body.
 - A short pre-run sequence brings the selected helmet down in a UFO claw, attaches it to the headless runner, then hands off to READY and the countdown without advancing gameplay time.
@@ -40,11 +40,12 @@ Serve `dist/` over HTTP and open `index.html`.
 ```sh
 node engine-qa.mjs
 node qa.cjs
+node asset-qa.mjs
 ```
 
 The engine suite checks variable jump trajectories, takeoff/coyote and buffered-tap safety, slide clearance and safe exit, exact stage timing, speed easing/cap, wide and overhead patterns, shield invulnerability, single-award collection, deterministic seeds, equivalent 30–240 FPS simulation, and four automated ten-minute runs.
 
-The UI suite checks legacy save migration, storage failure, collection failure, missing images, rejected audio, menus, collection search/favorites/random selection, the frozen UFO intro state, keyboard and pointer jump/slide controls, held-input release, pause/tab freezing, achievements, restart, persistence and canvas resize. The canvas is also rendered independently for art alignment inspection.
+The UI suite checks legacy save migration, storage failure, collection failure, missing images, rejected audio, menus, collection search/favorites/random selection, the frozen UFO intro state, keyboard and pointer jump/slide controls, held-input release, pause/tab freezing, achievements, restart, persistence, canvas resize, and a loaded-image renderer smoke path. `asset-qa.mjs` verifies active hazard/collectible coverage, transparent PNG capability, required presentation assets, all 221 portrait paths, music presence and renderer asset contracts.
 
 Press the backtick key during a run to show development hitboxes. This is off by default and not shown in the public interface.
 

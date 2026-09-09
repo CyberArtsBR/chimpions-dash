@@ -90,7 +90,13 @@ export function createRenderer(canvas){
   const y=baseline-top,height=top-bottom;
   const im=hazardSprites[o.id==='log-pile'?'log':o.id];
   if(ready(im)){
-   if(overhead)ctx.drawImage(im,0,0,im.width,Math.round(im.height*.58),x,y,o.w,height);
+   if(o.id==='log-pile'){
+    const aspect=Math.max(.5,im.width/im.height),dh=Math.min(height,Math.max(18,height*.92)),dw=Math.min(o.w*.42,dh*aspect);
+    const gap=(o.w-dw*3)/2,baseY=baseline-dh;
+    ctx.drawImage(im,x,baseY+2,dw,dh);
+    ctx.drawImage(im,x+dw+gap,baseY-1,dw,dh);
+    ctx.drawImage(im,x+(dw+gap)*2,baseY+2,dw,dh);
+   }else if(overhead)ctx.drawImage(im,0,0,im.width,Math.round(im.height*.58),x,y,o.w,height);
    else ctx.drawImage(im,x,y,o.w,height);
   }else{
    // Failed or pending assets retain exactly the collider's visible footprint.

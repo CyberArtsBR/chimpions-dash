@@ -8,6 +8,7 @@ on:
       - 'dist/**'
       - 'engine-qa.mjs'
       - 'qa.cjs'
+      - 'asset-qa.mjs'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -38,6 +39,9 @@ jobs:
 
       - name: Run UI QA
         run: node qa.cjs
+
+      - name: Run asset integrity QA
+        run: node asset-qa.mjs
 
   deploy:
     name: Deploy GitHub Pages

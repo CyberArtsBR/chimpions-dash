@@ -19,6 +19,7 @@ r=createRun({seed:6});r.spawnDistance=1e9;r.flow=99;r.bananas=[{x:PLAYER_X,y:48,
 r=createRun({seed:7});r.spawnDistance=1e9;r.flow=99;r.obstacles=[{...TYPES[0],x:PLAYER_X-80,passed:false,resolved:'unresolved',minClearance:999}];events=step(r,STEP);assert(events.includes('chimpion-mode'),'clean passes reaching full Flow activate mode');
 
 for(const stage of [1,2,3,5,10])for(const seed of [1,77,9001]){const p=buildPattern(targetSpeed(stage),1,()=>seed/10000,stage);assert(validatePattern(p.items,targetSpeed(stage)));for(const o of p.items)assert(o.minStage<=stage||o.id==='log')}
+const stageOneIds=new Set();for(let i=1;i<=160;i++){const p=buildPattern(BASE_SPEED,i,()=>i/161,1);for(const o of p.items){stageOneIds.add(o.id);assert(!['puddle','branch','vine','rock'].includes(o.id),`Stage 1 must not spawn ${o.id}`);assert(['short','wide'].includes(o.family),`Stage 1 family ${o.family} is not onboarding-safe`)}}assert(stageOneIds.has('log-pile'),'Stage 1 should retain a long-jump obstacle');
 const earlyPair=[...Array(80)].map((_,i)=>buildPattern(BASE_SPEED,i,()=>((i*37)%99)/100,2)).find(p=>p.id==='quick-hop-high');if(earlyPair)assert((earlyPair.items[1].x-earlyPair.items[0].x-earlyPair.items[0].w)/BASE_SPEED>=1.1);
 
 function snapshot(seed){const x=createRun({seed});x.invulnerable=1e6;for(let i=0;i<120*100;i++)step(x,STEP);return{x:x.obstacles.map(o=>o.id),bananas:x.bananas.map(b=>[Math.round(b.x),b.golden]),pattern:x.currentPattern,score:x.score}}
