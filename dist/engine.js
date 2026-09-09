@@ -4,14 +4,14 @@ export const BIOMES=[['THE EMERALD WILDS','#73c897','#174e3d'],['CANOPY RUN','#5
 
 // Collision boxes intentionally sit inside the visual art for fair silhouettes.
 export const TYPES=[
- {id:'log',name:'fallen log',family:'short',action:'jump',w:52,h:25,boxes:[[7,0,38,20]],tile:0,minStage:1,difficulty:1,reaction:.72,recovery:.58},
- {id:'mushroom',name:'mushrooms',family:'short',action:'jump',w:48,h:25,boxes:[[9,0,30,19]],tile:2,minStage:1,difficulty:1,reaction:.72,recovery:.58},
- {id:'thorns',name:'thorn bush',family:'short',action:'jump',w:50,h:33,boxes:[[9,1,32,24]],tile:3,minStage:2,difficulty:2,reaction:.78,recovery:.62},
- {id:'stump',name:'tree stump',family:'high',action:'high-jump',w:58,h:89,boxes:[[7,0,44,84]],tile:4,minStage:2,difficulty:2,reaction:.88,recovery:.82},
- {id:'spike',name:'spike plant',family:'high',action:'high-jump',w:55,h:84,boxes:[[8,0,39,76]],tile:6,minStage:3,difficulty:3,reaction:.92,recovery:.84},
- {id:'log-pile',name:'log pile',family:'wide',action:'high-jump',w:138,h:28,boxes:[[7,0,124,19]],tile:-1,minStage:1,difficulty:2,reaction:1,recovery:.95},
- {id:'puddle',name:'wide puddle',family:'wide',action:'high-jump',w:132,h:15,boxes:[[3,0,126,12]],tile:-1,minStage:2,difficulty:2,reaction:1,recovery:.95},
- {id:'spike-patch',name:'wide spikes',family:'wide',action:'high-jump',w:148,h:27,boxes:[[5,0,138,22]],tile:-1,minStage:3,difficulty:3,reaction:1.05,recovery:1},
+ {id:'log',name:'fallen log',family:'short',action:'jump',w:64,h:38,boxes:[[9,0,46,28]],tile:0,minStage:1,difficulty:1,reaction:.72,recovery:.58},
+ {id:'mushroom',name:'mushrooms',family:'short',action:'jump',w:58,h:38,boxes:[[11,0,36,27]],tile:2,minStage:1,difficulty:1,reaction:.72,recovery:.58},
+ {id:'thorns',name:'thorn bush',family:'short',action:'jump',w:60,h:44,boxes:[[11,1,38,31]],tile:3,minStage:2,difficulty:2,reaction:.78,recovery:.62},
+ {id:'stump',name:'tree stump',family:'high',action:'high-jump',w:58,h:98,boxes:[[7,0,44,84]],tile:4,minStage:2,difficulty:2,reaction:.88,recovery:.82},
+ {id:'spike',name:'spike plant',family:'high',action:'high-jump',w:55,h:94,boxes:[[8,0,39,76]],tile:6,minStage:3,difficulty:3,reaction:.92,recovery:.84},
+ {id:'log-pile',name:'log pile',family:'wide',action:'high-jump',w:138,h:40,boxes:[[7,0,124,19]],tile:-1,minStage:1,difficulty:2,reaction:1,recovery:.95},
+ {id:'puddle',name:'wide puddle',family:'wide',action:'high-jump',w:132,h:24,boxes:[[3,0,126,12]],tile:-1,minStage:2,difficulty:2,reaction:1,recovery:.95},
+ {id:'spike-patch',name:'wide spikes',family:'wide',action:'high-jump',w:148,h:38,boxes:[[5,0,138,22]],tile:-1,minStage:3,difficulty:3,reaction:1.05,recovery:1},
  {id:'branch',name:'hanging branch',family:'overhead',action:'slide',w:115,h:78,boxes:[[5,52,105,22]],tile:-1,minStage:2,difficulty:2,reaction:.92,recovery:.62},
  {id:'vine',name:'hanging vines',family:'overhead',action:'slide',w:96,h:82,boxes:[[7,50,82,25]],tile:-1,minStage:3,difficulty:2,reaction:.94,recovery:.66},
  {id:'canopy',name:'fallen canopy',family:'flex',action:'jump-or-slide',w:98,h:74,boxes:[[5,49,88,20]],tile:-1,minStage:4,difficulty:3,reaction:.98,recovery:.72}

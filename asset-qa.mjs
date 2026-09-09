@@ -33,7 +33,7 @@ for(const id of [...spriteIds].sort()){
  requireFile(rel,2048);
  spriteInfo[id]=pngInfo(rel);
 }
-for(const rel of ['dist/assets/ground-clean.png','dist/assets/ufo-claw.png']){requireFile(rel,8192);pngInfo(rel)}
+for(const rel of ['dist/assets/ground-green.png','dist/assets/ufo-claw.png']){requireFile(rel,8192);pngInfo(rel)}
 for(const rel of ['dist/assets/body-atlas.webp','dist/assets/jungle-v2.webp','dist/assets/pixel.ttf'])requireFile(rel,4096);
 const musicBytes=requireFile('dist/assets/chimpions-army.mp3',250000);
 assert(musicBytes<12*1024*1024,'Background music is too large for a lightweight browser game');
@@ -48,7 +48,7 @@ for(const c of collection){
 }
 
 const render=fs.readFileSync(path.join(root,'dist','render.js'),'utf8');
-for(const token of ['assets/ufo-claw.png','assets/ground-clean.png','assets/sprites-clean/']){
+for(const token of ['assets/ufo-claw.png','assets/ground-green.png','assets/sprites-clean/']){
  assert(render.includes(token),`Renderer lost required asset contract: ${token}`);
 }
 assert(render.includes("o.id==='log-pile'"),'Renderer must special-case the long-jump log pile instead of stretching one log');

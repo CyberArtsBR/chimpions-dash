@@ -14,7 +14,7 @@ export function createRenderer(canvas){
   jungle=asset('assets/jungle-v2.webp'),
   bodies=asset('assets/body-atlas.webp'),
   ufo=asset('assets/ufo-claw.png'),
-  restoredGround=asset('assets/ground-clean.png');
+  restoredGround=asset('assets/ground-green.png');
  const spriteNames=['log','rock','mushroom','thorns','stump','stone','spike','puddle','spike-patch','ravine','branch','vine','temple-beam','canopy','banana','golden'];
  const hazardSprites=Object.fromEntries(spriteNames.map(name=>[name,asset(`assets/sprites-clean/${name}.png`)]));
  let current=null,sceneTime=0;
@@ -33,8 +33,8 @@ export function createRenderer(canvas){
   ctx.shadowColor='#85eaf0';ctx.shadowBlur=5;ctx.fillStyle='#8ddce333';ctx.strokeStyle='#d8ffff';ctx.lineWidth=3;
   ctx.beginPath();ctx.arc(0,0,size*.49,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
   ctx.save();ctx.beginPath();ctx.arc(0,0,size*.445,0,Math.PI*2);ctx.clip();
-  // Keep the improved crop: more of the face and mouth inside the bubble.
-  ctx.drawImage(im,im.width*.11,im.height*.08,im.width*.78,im.height*.68,-size*.485,-size*.465,size*.97,size*.95);
+  // Shift the portrait crop toward its face center and widen it for a gentler zoom.
+  ctx.drawImage(im,im.width*.16,im.height*.035,im.width*.84,im.height*.76,-size*.485,-size*.465,size*.97,size*.95);
   ctx.fillStyle='#9eeeff18';ctx.fillRect(-size/2,-size/2,size,size);ctx.restore();
   ctx.strokeStyle='#73bfc9';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,size*.445,0,Math.PI*2);ctx.stroke();
   ctx.fillStyle='#ffffffaa';ctx.fillRect(-size*.27,-size*.33,size*.13,size*.055);ctx.fillRect(-size*.34,-size*.24,size*.055,size*.12);
@@ -74,9 +74,9 @@ export function createRenderer(canvas){
  function ground(vw,h,run){
   const tile=restoredGround;
   if(ready(tile)){
-   const displayH=92,displayW=tile.width/tile.height*displayH;
+   const displayH=42,displayW=tile.width/tile.height*displayH;
    const offset=(run.distance*100)%displayW;
-   for(let x=-displayW;x<vw+displayW;x+=displayW)ctx.drawImage(tile,x-offset,PLAYER_VISUAL_DROP-61,displayW,displayH);
+   for(let x=-displayW;x<vw+displayW;x+=displayW)ctx.drawImage(tile,x-offset,PLAYER_VISUAL_DROP-20,displayW,displayH);
   }else{ctx.fillStyle='#326c2c';ctx.fillRect(0,PLAYER_VISUAL_DROP,vw,Math.max(60,h))}
  }
 
@@ -87,9 +87,11 @@ export function createRenderer(canvas){
   const x=o.x+(o._mx||0),baseline=HAZARD_VISUAL_DROP-(o._my||0);
   const top=overhead?Math.max(...boxes.map(b=>b.y+b.h))-(o._my||0):o.h;
   const bottom=overhead?Math.min(...boxes.map(b=>b.y))-(o._my||0):0;
-  const y=baseline-top,height=top-bottom;
+  const extra=overhead?12:0;
+  const y=baseline-top-extra,height=top-bottom+extra;
   const im=hazardSprites[o.id==='log-pile'?'log':o.id];
   if(ready(im)){
+   ctx.save();ctx.shadowColor='#061a14';ctx.shadowBlur=3;
    if(o.id==='log-pile'){
     const aspect=Math.max(.5,im.width/im.height),dh=Math.min(height,Math.max(18,height*.92)),dw=Math.min(o.w*.42,dh*aspect);
     const gap=(o.w-dw*3)/2,baseY=baseline-dh;
@@ -97,7 +99,9 @@ export function createRenderer(canvas){
     ctx.drawImage(im,x+dw+gap,baseY-1,dw,dh);
     ctx.drawImage(im,x+(dw+gap)*2,baseY+2,dw,dh);
    }else if(overhead)ctx.drawImage(im,0,0,im.width,Math.round(im.height*.58),x,y,o.w,height);
+
    else ctx.drawImage(im,x,y,o.w,height);
+   ctx.restore();
   }else{
    // Failed or pending assets retain exactly the collider's visible footprint.
    ctx.fillStyle=overhead?'#9a7045':o.family==='wide'?'#399bbc':'#997344';
