@@ -63,8 +63,8 @@ function patternCatalog(stage){const early=stage<=2,late=stage>=5;return[
  {id:'slide-gauntlet',difficulty:3,weight:stage>2?3.8:0,items:[['overhead',0],['overhead',early?1.0:.72]],recovery:.8},
  {id:'hop-then-duck',difficulty:4,weight:stage>3?2.5:0,items:[['short',0],['overhead',.92]],recovery:.92},
  {id:'double-rhythm',difficulty:4,weight:stage>4?1.8:0,items:[['short',0],['short',.74]],recovery:.84},
- {id:'wide-into-slide',difficulty:4,weight:stage>3?2.3:0,items:[['wide',0],['overhead',.80]],recovery:.96},
- {id:'high-into-slide',difficulty:4,weight:stage>4?2.1:0,items:[['high',0],['overhead',.82]],recovery:.9},
+ {id:'wide-into-slide',difficulty:4,weight:stage>3?2.3:0,items:[['wide',0],['overhead',1.05]],recovery:.96},
+ {id:'high-into-slide',difficulty:4,weight:stage>4?2.1:0,items:[['high',0],['overhead',.90]],recovery:.9},
  {id:'beam-pressure',difficulty:5,weight:stage>4?2.1:0,items:[['overhead',0],['short',.76],['overhead',.66]],recovery:.84},
  {id:'triple-rhythm',difficulty:5,weight:stage>5?1.5:0,items:[['short',0],['overhead',.76],['wide',.88]],recovery:.98},
  {id:'slide-crunch',difficulty:5,weight:stage>5?2.3:0,items:[['overhead',0],['overhead',.62],['short',.68]],recovery:.78}
