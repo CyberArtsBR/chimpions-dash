@@ -16,6 +16,8 @@ r=createRun({seed:4});r.spawnDistance=1e9;r.shield=true;r.obstacles=[{...TYPES[0
 r=createRun({seed:5});r.spawnDistance=1e9;r.bananas=[{x:PLAYER_X,y:48,golden:true,collected:false}];events=step(r,STEP);assert(events.includes('golden'));assert.equal(r.goldenBananas,1);const bonus=r.bonus;step(r,STEP);assert.equal(r.bonus,bonus);
 r=createRun({seed:6});r.spawnDistance=1e9;r.flow=99;r.bananas=[{x:PLAYER_X,y:48,golden:false,collected:false}];events=step(r,STEP);assert(events.includes('chimpion-mode'));assert(r.modeTime>7.9,'banana reaching full Flow must activate Chimpion Mode');
 
+r=createRun({seed:7});r.spawnDistance=1e9;r.flow=99;r.obstacles=[{...TYPES[0],x:PLAYER_X-80,passed:false,resolved:'unresolved',minClearance:999}];events=step(r,STEP);assert(events.includes('chimpion-mode'),'clean passes reaching full Flow activate mode');
+
 for(const stage of [1,2,3,5,10])for(const seed of [1,77,9001]){const p=buildPattern(targetSpeed(stage),1,()=>seed/10000,stage);assert(validatePattern(p.items,targetSpeed(stage)));for(const o of p.items)assert(o.minStage<=stage||o.id==='log')}
 const earlyPair=[...Array(80)].map((_,i)=>buildPattern(BASE_SPEED,i,()=>((i*37)%99)/100,2)).find(p=>p.id==='quick-hop-high');if(earlyPair)assert((earlyPair.items[1].x-earlyPair.items[0].x-earlyPair.items[0].w)/BASE_SPEED>=1.1);
 
