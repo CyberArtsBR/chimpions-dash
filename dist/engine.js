@@ -124,7 +124,7 @@ function spawnPattern(r){
   r.obstacles.push(o);addBananas(r,o);
   if(i>0){const prev=p.items[i-1];sprinkleGapBananas(r,prev.x+prev.w+18,o.x-18)}
  }
- const last=p.items.at(-1),latePressure=Math.min(.18,Math.max(0,r.stage-4)*.025),travelSpace=Math.max(.66,p.recovery-latePressure)+(p.difficulty>=4?.20:0);
+ const last=p.items.at(-1),latePressure=Math.min(.12,Math.max(0,r.stage-4)*.015),travelSpace=Math.max(.90,p.recovery-latePressure)+(p.difficulty>=4?.20:0);
  if(randomValue(r)>.26)sprinkleGapBananas(r,last.x+last.w+24,last.x+last.w+r.speed*Math.max(.50,p.recovery*.72));
  r.spawnDistance=last.x+last.w-p.items[0].x+r.speed*travelSpace+randomValue(r)*r.speed*(r.stage>=5?.20:.30);
  r.notice=p.id==='quick-hop-high'?'QUICK HOP · RESET · HIGH JUMP':p.id==='duck-under'?'SLIDE UNDER':p.id==='wide-leap'?'HOLD FOR THE WIDE JUMP':p.id==='stage-one-long-jump'?'HOLD FOR THE LONG JUMP':p.id==='slide-gauntlet'?'LOW CEILING · STAY DOWN':p.id==='wide-into-slide'?'LONG JUMP · THEN SLIDE':p.id==='high-into-slide'?'HIGH CLEARANCE · THEN DUCK':'';
