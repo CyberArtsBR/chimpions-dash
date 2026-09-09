@@ -9,6 +9,7 @@ on:
       - 'engine-qa.mjs'
       - 'qa.cjs'
       - 'asset-qa.mjs'
+      - 'prepare-deploy.mjs'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
@@ -43,6 +44,16 @@ jobs:
       - name: Run asset integrity QA
         run: node asset-qa.mjs
 
+      - name: Test production packaging
+        env:
+          GITHUB_SHA: test-build-000000000000000000000000000000000000
+        run: |
+          node prepare-deploy.mjs
+          node --check site/app.js
+          node --check site/engine.js
+          node --check site/render.js
+          node --check site/audio.js
+
   deploy:
     name: Deploy GitHub Pages
     needs: test
@@ -57,10 +68,13 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare cache-busted production build
+        run: node prepare-deploy.mjs
+
       - name: Upload game
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
+          path: ./site
 
       - name: Deploy
         id: deployment
