@@ -124,9 +124,9 @@ function spawnPattern(r){
   r.obstacles.push(o);addBananas(r,o);
   if(i>0){const prev=p.items[i-1];sprinkleGapBananas(r,prev.x+prev.w+18,o.x-18)}
  }
- const last=p.items.at(-1),latePressure=Math.max(0,r.stage-4)*.05,travelSpace=Math.max(.56,p.recovery-latePressure)+(p.difficulty>=4?.18:0);
+ const last=p.items.at(-1),latePressure=Math.min(.18,Math.max(0,r.stage-4)*.025),travelSpace=Math.max(.66,p.recovery-latePressure)+(p.difficulty>=4?.20:0);
  if(randomValue(r)>.26)sprinkleGapBananas(r,last.x+last.w+24,last.x+last.w+r.speed*Math.max(.50,p.recovery*.72));
- r.spawnDistance=last.x+last.w-p.items[0].x+r.speed*travelSpace+randomValue(r)*r.speed*(r.stage>=5?.18:.28);
+ r.spawnDistance=last.x+last.w-p.items[0].x+r.speed*travelSpace+randomValue(r)*r.speed*(r.stage>=5?.20:.30);
  r.notice=p.id==='quick-hop-high'?'QUICK HOP · RESET · HIGH JUMP':p.id==='duck-under'?'SLIDE UNDER':p.id==='wide-leap'?'HOLD FOR THE WIDE JUMP':p.id==='stage-one-long-jump'?'HOLD FOR THE LONG JUMP':p.id==='slide-gauntlet'?'LOW CEILING · STAY DOWN':p.id==='wide-into-slide'?'LONG JUMP · THEN SLIDE':p.id==='high-into-slide'?'HIGH CLEARANCE · THEN DUCK':'';
  r.noticeTime=r.notice?2.1:0}
 function skill(r,amount,points,event){r.flow=Math.min(100,r.flow+amount);r.maxFlow=Math.max(r.maxFlow,r.flow);r.combo++;r.longestCombo=Math.max(r.longestCombo,r.combo);r.bonus+=Math.round(points*flowMultiplier(r.flow));r.notice=event;r.noticeTime=.8;if(r.flow>=100&&r.modeTime<=0){r.modeTime=8;r.notice='CHIMPION MODE!';r.noticeTime=1.6;return'chimpion-mode'}return event}
