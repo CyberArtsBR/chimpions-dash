@@ -99,13 +99,28 @@ export function createRenderer(canvas){
   ctx.save();ctx.translate(o.x,drop);const w=o.w,h=o.h,p=Math.max(2,Math.round(Math.min(w,h)/12));
 
   if(o.id==='log'){
-   const yy=-h*.72;
-   pxRect(10,yy,w*.68,h*.44,'#402415');pxRect(14,yy+3,w*.60,h*.36,'#6d4021');pxRect(18,yy+7,w*.52,h*.26,'#8a572a');
-   for(let i=0;i<6;i++)pxRect(20+i*w*.095,yy+2,3,h*.38,i%2?'#56301b':'#774826');
-   ctx.fillStyle='#d1a170';ctx.beginPath();ctx.ellipse(13,yy+h*.22,11,h*.19,0,0,Math.PI*2);ctx.fill();
-   ctx.strokeStyle='#8a5a32';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(13,yy+h*.22,7,h*.11,0,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.ellipse(13,yy+h*.22,3,h*.05,0,0,Math.PI*2);ctx.stroke();
-   pxRect(w*.46,yy-1,10,3,'#438e2f');pxRect(w*.57,yy-5,13,3,'#6bc542');pxRect(w*.65,yy-8,8,3,'#8ee34a');
-   for(let i=0;i<4;i++){const vx=w*(.50+i*.08),vy=yy+3+i*2;pxRect(vx,vy,2,13+i*3,'#215d28');if(i!==1)pxRect(vx-2,vy+8,6,2,'#59b63a')}
+   const yy=-h*.70;
+   // compact stage-1 fallen log: layered bark, circular cut end, broken branches and moss
+   pxRect(9,yy,w*.70,h*.42,'#2d1a10');
+   pxRect(12,yy+2,w*.64,h*.36,'#51301b');
+   pxRect(16,yy+5,w*.56,h*.28,'#744522');
+   pxRect(19,yy+7,w*.49,h*.20,'#8f582b');
+   for(let i=0;i<7;i++){
+    const bx=20+i*w*.075;
+    pxRect(bx,yy+2,2,h*.34,i%2?'#3b2114':'#64391f');
+    if(i%3===0)pxRect(bx+2,yy+h*.17,5,2,'#9c6734');
+   }
+   ctx.fillStyle='#d2a16f';ctx.beginPath();ctx.ellipse(12,yy+h*.21,10.5,h*.19,0,0,Math.PI*2);ctx.fill();
+   ctx.strokeStyle='#8a5a32';ctx.lineWidth=2;
+   ctx.beginPath();ctx.ellipse(12,yy+h*.21,6.4,h*.11,0,0,Math.PI*2);ctx.stroke();
+   ctx.beginPath();ctx.ellipse(12,yy+h*.21,3.1,h*.055,0,0,Math.PI*2);ctx.stroke();
+   pxRect(w*.44,yy-2,10,3,'#3d842f');pxRect(w*.52,yy-5,13,4,'#61b53a');pxRect(w*.62,yy-8,9,4,'#8adb4b');
+   pxRect(w*.70,yy+h*.12,8,3,'#2b180f');pxRect(w*.77,yy+h*.08,7,3,'#2b180f');
+   for(let i=0;i<3;i++){
+    const vx=w*(.50+i*.10),vy=yy+2+i*2;
+    pxRect(vx,vy,2,13+i*3,'#1f5e2a');
+    pxRect(vx-2,vy+7,6,3,i%2?'#55a938':'#72c744');
+   }
 
   }else if(o.id==='stump'){
    pxRect(w*.14,-h*.94,w*.70,h*.86,'#2e1a12');pxRect(w*.20,-h*.89,w*.58,h*.77,'#6c4126');
@@ -132,11 +147,28 @@ export function createRenderer(canvas){
    }
 
   }else if(o.id==='puddle'){
-   const wave=Math.sin(sceneTime*8+o.x*.028)*2.5,shine=Math.sin(sceneTime*5+o.x*.018)*2;
-   pxRect(0,-13,w,13,'#031118');pxRect(2,-12,w-4,12,'#08232d');pxRect(8,-11,w-16,10,'#0d4660');pxRect(14,-10,w-28,8,'#13759b');
-   pxRect(18+wave,-8,w*.19,2,'#6fddff');pxRect(w*.43+shine,-7,w*.14,2,'#b3f4ff');pxRect(w*.69-wave,-8,w*.10,2,'#48bbe4');
-   for(let i=0;i<4;i++){const rx=18+i*(w*.20)+Math.sin(sceneTime*6+i)*1.8;ctx.strokeStyle='rgba(184,242,255,.65)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(rx,-6-(i%2),3+i%2,0,Math.PI*1.45);ctx.stroke()}
-   pxRect(0,-4,12,4,'#21472f');pxRect(w-13,-4,13,4,'#21472f');
+   const wave=Math.sin(sceneTime*7.5+o.x*.024)*2.5,shine=Math.sin(sceneTime*4.8+o.x*.016+1.4)*2;
+   // dark depth / shoreline
+   pxRect(0,-17,w,17,'#02111a');
+   pxRect(3,-16,w-6,15,'#05243a');
+   pxRect(8,-14,w-16,12,'#073e67');
+   pxRect(14,-12,w-28,10,'#0a6798');
+   pxRect(21,-10,w-42,7,'#0b86b8');
+   // irregular dark bank edge so it reads like a pool rather than a flat strip
+   pxRect(0,-5,10,5,'#203b2b');pxRect(7,-7,8,3,'#2c5a34');
+   pxRect(w-12,-5,12,5,'#203b2b');pxRect(w-19,-7,9,3,'#2c5a34');
+   pxRect(w*.18,-4,w*.10,2,'#2d6038');pxRect(w*.70,-4,w*.10,2,'#2d6038');
+   // pixel-wave highlights
+   pxRect(18+wave,-11,Math.max(12,w*.17),2,'#4dc8f2');
+   pxRect(w*.39+shine,-9,Math.max(10,w*.14),2,'#b9f4ff');
+   pxRect(w*.67-wave,-10,Math.max(9,w*.11),2,'#62d8ff');
+   pxRect(w*.27-shine,-7,Math.max(8,w*.09),1,'#76ddf5');
+   for(let i=0;i<5;i++){
+    const rx=18+i*(w*.18)+Math.sin(sceneTime*6+i)*1.7;
+    ctx.strokeStyle='rgba(202,248,255,.72)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(rx,-6-(i%2),3+(i%2),0,Math.PI*1.35);ctx.stroke();
+   }
 
   }else if(o.id==='ravine'){
    const drift=Math.sin(sceneTime*6+o.x*.02)*1.6;
@@ -187,14 +219,16 @@ export function createRenderer(canvas){
  function bananaBunch(x,y,golden=false){
   ctx.save();
   ctx.imageSmoothingEnabled=false;
-  const bw=34,bh=31,bx=Math.round(x-bw/2),by=Math.round(y-bh*.74);
+  const bw=33,bh=30,bx=Math.round(x-bw/2),by=Math.round(y-bh*.76);
   if(golden){ctx.shadowColor='#fff59a';ctx.shadowBlur=10}
   if(ready(bananaRef)){
+   // Trim the transparent/right-edge bleed that was creating the doubled banana fragment.
+   const sx=1,sy=1,sw=Math.max(1,bananaRef.width-6),sh=Math.max(1,bananaRef.height-2);
    ctx.globalCompositeOperation='source-over';
    ctx.globalAlpha=1;
-   ctx.drawImage(bananaRef,bx,by,bw,bh);
+   ctx.drawImage(bananaRef,sx,sy,sw,sh,bx,by,bw,bh);
   }else{
-   ctx.fillStyle=golden?'#ffe45b':'#ffc72d';ctx.beginPath();ctx.ellipse(x,y,13,10,0,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle=golden?'#ffe45b':'#ffc72d';ctx.beginPath();ctx.ellipse(x,y,12,9,0,0,Math.PI*2);ctx.fill();
   }
   ctx.restore()
  }
