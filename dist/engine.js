@@ -58,7 +58,7 @@ function patternCatalog(stage){const early=stage<=2,late=stage>=5;return[
  {id:'wide-leap',difficulty:2,weight:stage===1?1.4:3.7,items:[['wide',0]],recovery:1.02},
  {id:'duck-under',difficulty:2,weight:stage>1?(late?6.4:4.3):1.2,items:[['overhead',0]],recovery:late?.66:.75},
  {id:'choice-line',difficulty:3,weight:stage>3?2.2:0,items:[['flex',0]],recovery:.82},
- {id:'quick-hop-high',difficulty:3,weight:stage>1?2.6:0,items:[['short',0],['high',early?1.08:.82]],recovery:.96},
+ {id:'quick-hop-high',difficulty:3,weight:stage>1?2.6:0,items:[['short',0],['high',early?1.12:.82]],recovery:.96},
  {id:'duck-then-hop',difficulty:3,weight:stage>2?3.0:0,items:[['overhead',0],['short',early?1.0:.78]],recovery:.88},
  {id:'slide-gauntlet',difficulty:3,weight:stage>2?3.8:0,items:[['overhead',0],['overhead',early?1.0:.72]],recovery:.8},
  {id:'hop-then-duck',difficulty:4,weight:stage>3?2.5:0,items:[['short',0],['overhead',.92]],recovery:.92},
