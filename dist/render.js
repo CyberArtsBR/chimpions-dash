@@ -360,16 +360,16 @@ export function createRenderer(canvas){
  }
 
  function draw(state,run,selected,particles=[]){
-  current=[state,run,selected,particles];if(!ctx)return;sceneTime=state==='countdown'?((typeof performance!=='undefined'?performance.now():Date.now())/1000):(run.time||0);
+  current=[state,run,selected,particles];if(!ctx)return;sceneTime=(state==='intro'||state==='countdown')?((typeof performance!=='undefined'?performance.now():Date.now())/1000):(run.time||0);
   const w=canvas.width,h=canvas.height;if(!w||!h)return;
-  const active=['running','countdown','paused','over'].includes(state),vw=Math.max(600,Math.min(1080,w/h*500)),scale=w/vw,groundY=h*.9;
+  const active=['intro','running','countdown','paused','over'].includes(state),vw=Math.max(600,Math.min(1080,w/h*500)),scale=w/vw,groundY=h*.9;
   ctx.clearRect(0,0,w,h);ctx.imageSmoothingEnabled=false;sky(w,h,run);
   ctx.save();ctx.translate(0,groundY);ctx.scale(scale,scale);ground(vw,h/scale,run);
   if(active){
    for(const o of run.obstacles)obstacle(o);
    for(const b of run.bananas)bananaBunch(b.x,-b.y,b.golden)
    if(run.power){ctx.save();ctx.shadowColor='#a5ffe4';ctx.shadowBlur=14;ctx.font='30px serif';ctx.textAlign='center';ctx.fillText('🛡️',run.power.x,-run.power.y+12);ctx.restore()}
-   if(state==='countdown')drawUfoIntro();
+   if(state==='intro')drawUfoIntro();
    drawDashTrail(run);
    character(state,run,selected);
    for(const p of particles){ctx.globalAlpha=Math.min(1,p.life/.4);ctx.fillStyle=p.color||'#d0dca0';if(p.label){ctx.font='bold 18px monospace';ctx.fillText(p.label,p.x,-p.y)}else ctx.fillRect(p.x,-p.y,p.size||4,p.size||4)}
