@@ -40,35 +40,32 @@ function movePlayer(r,dt){r.landing=Math.max(0,r.landing-dt);r.jumpBuffer=Math.m
 function cloneType(t,x,r){
  const o={...t,x,passed:false,resolved:'unresolved',nearAwarded:false,perfectAwarded:false,minClearance:999,_mx:0,_my:0,motion:null,motionAmp:0,motionRate:0,motionPhase:0};
  if(r&&t.family==='overhead'&&r.stage>=3&&randomValue(r)<.42){
-  o.motion=randomValue(r)<.55?'bob':'sway';
-  o.motionAmp=o.motion==='bob'?(4+randomValue(r)*4):(7+randomValue(r)*8);
-  o.motionRate=o.motion==='bob'?(1.5+randomValue(r)*1.2):(1.1+randomValue(r)*.9);
-  o.motionPhase=randomValue(r)*Math.PI*2;
+  o.motion='bob';o.motionAmp=4+randomValue(r)*5;o.motionRate=1.35+randomValue(r)*1.0;o.motionPhase=randomValue(r)*Math.PI*2;
  }
  if(r&&t.id==='canopy'&&r.stage>=5&&randomValue(r)<.28){
-  o.motion='bob';o.motionAmp=5+randomValue(r)*5;o.motionRate=1.4+randomValue(r)*.8;o.motionPhase=randomValue(r)*Math.PI*2;
+  o.motion='bob';o.motionAmp=5+randomValue(r)*5;o.motionRate=1.25+randomValue(r)*.8;o.motionPhase=randomValue(r)*Math.PI*2;
  }
  return o
 }
 const reactionDistance=(speed,seconds)=>Math.max(280,speed*seconds);
 function patternCatalog(stage){const early=stage<=2,late=stage>=5;return[
- {id:'easy-hop',difficulty:1,weight:4.6,items:[['short',0]],recovery:.74},
+ {id:'easy-hop',difficulty:1,weight:4.6,items:[['short',0]],recovery:.75},
  {id:'stage-one-long-jump',difficulty:2,weight:stage===1?2.1:0,items:[['wide',0]],recovery:1.04},
- {id:'high-wall',difficulty:2,weight:stage>1?3.1:0,items:[['high',0]],recovery:.92},
- {id:'wide-leap',difficulty:2,weight:stage===1?1.4:3.7,items:[['wide',0]],recovery:1.02},
- {id:'duck-under',difficulty:2,weight:stage>1?(late?6.4:4.3):1.2,items:[['overhead',0]],recovery:late?.66:.75},
- {id:'choice-line',difficulty:3,weight:stage>3?2.2:0,items:[['flex',0]],recovery:.82},
- {id:'quick-hop-high',difficulty:3,weight:stage>1?2.6:0,items:[['short',0],['high',early?1.12:.82]],recovery:.96},
- {id:'duck-then-hop',difficulty:3,weight:stage>2?3.0:0,items:[['overhead',0],['short',early?1.0:.78]],recovery:.88},
- {id:'slide-gauntlet',difficulty:3,weight:stage>2?3.8:0,items:[['overhead',0],['overhead',early?1.0:.72]],recovery:.8},
- {id:'hop-then-duck',difficulty:4,weight:stage>3?2.5:0,items:[['short',0],['overhead',.92]],recovery:.92},
- {id:'double-rhythm',difficulty:4,weight:stage>4?1.8:0,items:[['short',0],['short',.74]],recovery:.84},
- {id:'wide-into-slide',difficulty:4,weight:stage>3?2.3:0,items:[['wide',0],['overhead',1.05]],recovery:.96},
- {id:'high-into-slide',difficulty:4,weight:stage>4?2.1:0,items:[['high',0],['overhead',.90]],recovery:.9},
- {id:'beam-pressure',difficulty:5,weight:stage>4?2.1:0,items:[['overhead',0],['short',.76],['overhead',.66]],recovery:.84},
- {id:'triple-rhythm',difficulty:5,weight:stage>5?1.5:0,items:[['short',0],['overhead',.76],['wide',.88]],recovery:.98},
- {id:'slide-crunch',difficulty:5,weight:stage>5?2.3:0,items:[['overhead',0],['overhead',.62],['short',.68]],recovery:.78}
- ].filter(p=>p.weight>0&&p.difficulty<=Math.min(6,stage+2))}
+ {id:'high-wall',difficulty:2,weight:stage>1?3:0,items:[['high',0]],recovery:.95},
+ {id:'wide-leap',difficulty:2,weight:stage===1?1.4:3.2,items:[['wide',0]],recovery:1.03},
+ {id:'duck-under',difficulty:2,weight:stage>1?(late?6.0:4.0):1.2,items:[['overhead',0]],recovery:late?.72:.78},
+ {id:'choice-line',difficulty:3,weight:stage>3?2.1:0,items:[['flex',0]],recovery:.82},
+ {id:'quick-hop-high',difficulty:3,weight:stage>1?2.4:0,items:[['short',0],['high',early?1.12:.88]],recovery:.98},
+ {id:'duck-then-hop',difficulty:3,weight:stage>2?2.8:0,items:[['overhead',0],['short',early?1.05:.84]],recovery:.92},
+ {id:'slide-gauntlet',difficulty:3,weight:stage>3?3.2:0,items:[['overhead',0],['overhead',.90]],recovery:.86},
+ {id:'hop-then-duck',difficulty:4,weight:stage>3?2.2:0,items:[['short',0],['overhead',.98]],recovery:.96},
+ {id:'double-rhythm',difficulty:4,weight:stage>4?1.4:0,items:[['short',0],['short',.82]],recovery:.90},
+ {id:'wide-into-slide',difficulty:4,weight:stage>4?2.1:0,items:[['wide',0],['overhead',1.05]],recovery:.98},
+ {id:'high-into-slide',difficulty:4,weight:stage>4?2.1:0,items:[['high',0],['overhead',.96]],recovery:.96},
+ {id:'beam-pressure',difficulty:5,weight:stage>5?1.8:0,items:[['overhead',0],['short',.90],['overhead',.92]],recovery:.94},
+ {id:'triple-rhythm',difficulty:5,weight:stage>6?1.0:0,items:[['short',0],['overhead',.92],['wide',1.02]],recovery:1.0},
+ {id:'slide-crunch',difficulty:5,weight:stage>6?1.8:0,items:[['overhead',0],['overhead',.90],['short',.92]],recovery:.94}
+ ].filter(p=>p.weight>0&&p.difficulty<=Math.min(5,stage+1))}
 function chooseWeighted(list,r){let total=list.reduce((n,x)=>n+x.weight,0),roll=randomValue(r)*total;for(const x of list){roll-=x.weight;if(roll<=0)return x}return list.at(-1)}
 function chooseFamily(r,family,difficulty){const list=TYPES.filter(t=>t.minStage<=r.stage&&t.difficulty<=difficulty+1&&t.family===family);return list[Math.floor(randomValue(r)*list.length)]||TYPES[0]}
 function directPattern(r){let options=patternCatalog(r.stage);if(r.lastDifficulty>=4)options=options.filter(p=>p.difficulty<=2);const def=chooseWeighted(options,r),start=1080+reactionDistance(r.speed,def.difficulty>=3?1.05:.86),items=[];for(let i=0;i<def.items.length;i++){const[family,gap]=def.items[i],type=chooseFamily(r,family,def.difficulty),x=i?items.at(-1).x+items.at(-1).w+r.speed*gap:start;items.push(cloneType(type,x,r))}return{id:def.id,difficulty:def.difficulty,items,recovery:def.recovery}}
@@ -135,10 +132,5 @@ function spawnPattern(r){
 function skill(r,amount,points,event){r.flow=Math.min(100,r.flow+amount);r.maxFlow=Math.max(r.maxFlow,r.flow);r.combo++;r.longestCombo=Math.max(r.longestCombo,r.combo);r.bonus+=Math.round(points*flowMultiplier(r.flow));r.notice=event;r.noticeTime=.8;if(r.flow>=100&&r.modeTime<=0){r.modeTime=8;r.notice='CHIMPION MODE!';r.noticeTime=1.6;return'chimpion-mode'}return event}
 function checkResolution(r,o,events){if(o.resolved==='hit')return;const p=playerBox(r);if(o.x<PLAYER_X+28&&o.x+o.w>PLAYER_X-28)for(const b of obstacleBoxes(o)){const vertical=p.y>=b.y+b.h?p.y-(b.y+b.h):b.y-(p.y+p.h);o.minClearance=Math.min(o.minClearance,Math.max(0,vertical))}if(!o.passed&&o.x+o.w<PLAYER_X-18){o.passed=true;r.passed++;let event='pass';const didSlide=o.action==='slide'&&p.sliding,didJump=o.action!=='slide'&&r.y>0;if((didSlide||didJump)&&o.minClearance<24){if(didSlide){r.perfectSlides++;event=skill(r,13,80,'PERFECT SLIDE')}else{r.perfectJumps++;event=skill(r,12,80,'PERFECT JUMP')}}else if(o.minClearance<13){r.nearMisses++;event=skill(r,9,55,'CLOSE CALL')}else{r.flow=Math.min(100,r.flow+4);r.combo++;r.longestCombo=Math.max(r.longestCombo,r.combo)}events.push(event)}}
 function startEvent(r){const names=['BOULDER CHASE','MONSOON','STAMPEDE','TEMPLE COLLAPSE'];r.event={name:names[(r.stage+r.seed)%names.length],time:12};r.nextEvent=r.time+75+randomValue(r)*35;r.notice=r.event.name;r.noticeTime=1.8}
-function updateObstacleMotion(o,time){
- o._mx=0;o._my=0;
- if(!o.motion)return;
- if(o.motion==='bob')o._my=Math.sin(time*o.motionRate+o.motionPhase)*o.motionAmp;
- else if(o.motion==='sway'){o._mx=Math.sin(time*o.motionRate+o.motionPhase)*o.motionAmp;o._my=Math.cos(time*(o.motionRate*.85)+o.motionPhase)*2}
-}
+function updateObstacleMotion(o,time){o._mx=0;o._my=0;if(o.motion==='bob')o._my=Math.sin(time*o.motionRate+o.motionPhase)*o.motionAmp}
 export function step(r,dt){if(r.dead)return[];const events=[];r.time+=dt;const next=stageAt(r.time);if(next!==r.stage){r.stage=next;r.stageChanged=1.8;r.targetSpeed=targetSpeed(r.stage);r.notice=`STAGE ${String(r.stage).padStart(2,'0')} · ${BIOMES[(r.stage-1)%BIOMES.length][0]}`;r.noticeTime=1.8;r.spawnDistance=Math.max(r.spawnDistance,r.speed*1.2);events.push('stage')}r.stageChanged=Math.max(0,r.stageChanged-dt);r.targetSpeed=targetSpeed(r.stage);r.speed=r.time<30?BASE_SPEED:r.speed+(r.targetSpeed-r.speed)*Math.min(1,dt/2.5);r.modeTime=Math.max(0,r.modeTime-dt);r.flow=Math.max(0,r.flow-dt*(r.modeTime>0?1:2.5));r.invulnerable=Math.max(0,r.invulnerable-dt);r.shieldHit=Math.max(0,r.shieldHit-dt);r.shake=Math.max(0,r.shake-dt);r.slowMo=Math.max(0,r.slowMo-dt);if(r.time>=r.nextEvent&&!r.event&&r.stage>=3)startEvent(r);if(r.event){r.event.time-=dt;if(r.event.time<=0)r.event=null}const dx=r.speed*dt;r.distance+=dx/100;r.noticeTime=Math.max(0,r.noticeTime-dt);if(movePlayer(r,dt))events.push('land');r.dashing=r.y===0&&(r.slideHeld||r.slideMin>0);r.dashTrail=r.dashing?Math.min(1,(r.dashTrail||0)+dt*8):Math.max(0,(r.dashTrail||0)-dt*4);r.spawnDistance-=dx;if(r.spawnDistance<=0)spawnPattern(r);for(const o of r.obstacles){o.x-=dx;updateObstacleMotion(o,r.time);if(collides(r,o)){if(r.shield){r.shield=false;r.shieldBreaks++;r.invulnerable=.7;r.shieldHit=.34;r.shake=.22;r.slowMo=.12;r.flow=Math.max(0,r.flow-35);r.combo=0;o.resolved='hit';o.x=-o.w-50;events.push('shield-used')}else{r.dead=true;r.playerState='game-over';events.push('dead');break}}checkResolution(r,o,events)}r.obstacles=r.obstacles.filter(o=>o.x+o.w+(o._mx||0)>-40);for(const b of r.bananas){b.x-=dx;if(!b.collected&&Math.abs(b.x-PLAYER_X)<27&&Math.abs(b.y-(r.y+(playerBox(r).sliding?18:48)))<31){b.collected=true;r.bananaCount++;const value=b.golden?500:25;r.goldenBananas+=b.golden?1:0;r.bonus+=Math.round(value*flowMultiplier(r.flow));r.flow=Math.min(100,r.flow+(b.golden?30:3));r.maxFlow=Math.max(r.maxFlow,r.flow);events.push(b.golden?'golden':'banana');if(r.flow>=100&&r.modeTime<=0){r.modeTime=8;r.notice='CHIMPION MODE!';r.noticeTime=1.6;events.push('chimpion-mode')}}}r.bananas=r.bananas.filter(b=>!b.collected&&b.x>-35);if(r.time>=r.nextPower&&!r.power){r.power={x:1080+reactionDistance(r.speed,.8),y:126};r.nextPower=r.time+23+randomValue(r)*7}if(r.power){r.power.x-=dx;if(Math.abs(r.power.x-PLAYER_X)<34&&Math.abs(r.y+42-r.power.y)<43){r.shield=true;r.power=null;events.push('power')}else if(r.power.x<-40)r.power=null}if(r.time>=r.nextSplit){r.splits.push({time:Math.floor(r.time),distance:r.distance});r.nextSplit++}r.score=Math.floor(r.distance*10)+r.bonus;return events}
