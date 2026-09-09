@@ -50,7 +50,7 @@ function patternCatalog(stage){const early=stage<=2,late=stage>=5;return[
  {id:'slide-gauntlet',difficulty:3,weight:stage>3?2.2:0,items:[['overhead',0],['overhead',.90]],recovery:.86},
  {id:'hop-then-duck',difficulty:4,weight:stage>3?1.8:0,items:[['short',0],['overhead',.98]],recovery:.96},
  {id:'double-rhythm',difficulty:4,weight:stage>4?1.4:0,items:[['short',0],['short',.82]],recovery:.90},
- {id:'wide-into-slide',difficulty:4,weight:stage>4?1.7:0,items:[['wide',0],['overhead',.98]],recovery:.98},
+ {id:'wide-into-slide',difficulty:4,weight:stage>4?1.7:0,items:[['wide',0],['overhead',1.02]],recovery:.98},
  {id:'high-into-slide',difficulty:4,weight:stage>4?1.7:0,items:[['high',0],['overhead',.96]],recovery:.96},
  {id:'beam-pressure',difficulty:5,weight:stage>5?1.4:0,items:[['overhead',0],['short',.90],['overhead',.92]],recovery:.94},
  {id:'triple-rhythm',difficulty:5,weight:stage>6?1.0:0,items:[['short',0],['overhead',.92],['wide',1.02]],recovery:1.0}
