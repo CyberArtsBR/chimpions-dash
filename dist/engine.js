@@ -1,5 +1,5 @@
 // Deterministic, fixed-timestep endless-runner simulation. World units are pixels.
-export const STEP=1/120,PLAYER_X=150,BASE_SPEED=265,MAX_SPEED=540,GRAVITY=2200,JUMP_IMPULSE=600,LOW_HEIGHT=70,HOLD_TIME=.145,JUMP_BUFFER=.16,COYOTE_TIME=.10;
+export const STEP=1/120,PLAYER_X=150,BASE_SPEED=265,MAX_SPEED=540,GRAVITY=2200,JUMP_IMPULSE=600,LOW_HEIGHT=70,HOLD_TIME=.22,JUMP_BUFFER=.16,COYOTE_TIME=.10;
 export const BIOMES=[['THE EMERALD WILDS','#73c897','#174e3d'],['CANOPY RUN','#5bb98d','#123e34'],['WATERFALL GORGE','#83cbd3','#24556a'],['LOST TEMPLE','#d6b978','#4c553c'],['MOONLIT JUNGLE','#797ac7','#161f4e'],['STORM FOREST','#708799','#172b37'],['VOLCANIC WILDS','#e98a58','#49262d'],['CHIMPION DREAMSCAPE','#d78bd0','#293066']];
 
 // Collision boxes intentionally sit inside the visual art for fair silhouettes.
