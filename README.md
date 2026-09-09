@@ -28,6 +28,7 @@ Serve `dist/` over HTTP and open `index.html`.
 - Every trap family and banana uses the original 2D obstacle atlas, with visible fallbacks if an asset cannot load.
 - The scenery, hazards and characters remain deliberately 2D, with a detailed high-resolution pixel-art grass foreground instead of a flat lower panel.
 - Each NFT portrait is tightly cropped to the head inside a translucent glass helmet with a pixel-metal collar attached to the runner body.
+- A short pre-run sequence brings the selected helmet down in a UFO claw, attaches it to the headless runner, then hands off to READY and the countdown without advancing gameplay time.
 - Bananas, rare Golden Bananas, Perfect actions and Near Misses build Flow. Maximum Flow activates eight seconds of Chimpion Mode.
 - Shields absorb one hit, resolve that hazard once, and grant brief invulnerability.
 - Eight repeating biome treatments blend without loading screens; later stages add deterministic environmental events.
@@ -41,9 +42,9 @@ node engine-qa.mjs
 node qa.cjs
 ```
 
-The engine suite checks variable jump trajectories, slide clearance and safe exit, exact stage timing, speed easing/cap, wide and overhead patterns, shield invulnerability, single-award collection, deterministic seeds, equivalent 30–240 FPS simulation, and four automated ten-minute runs.
+The engine suite checks variable jump trajectories, takeoff/coyote and buffered-tap safety, slide clearance and safe exit, exact stage timing, speed easing/cap, wide and overhead patterns, shield invulnerability, single-award collection, deterministic seeds, equivalent 30–240 FPS simulation, and four automated ten-minute runs.
 
-The UI suite checks legacy save migration, storage failure, collection failure, missing images, rejected audio, menus, collection search/favorites/random selection, keyboard and pointer jump/slide controls, held-input release, pause/tab freezing, achievements, restart, persistence and canvas resize. The canvas is also rendered independently for art alignment inspection.
+The UI suite checks legacy save migration, storage failure, collection failure, missing images, rejected audio, menus, collection search/favorites/random selection, the frozen UFO intro state, keyboard and pointer jump/slide controls, held-input release, pause/tab freezing, achievements, restart, persistence and canvas resize. The canvas is also rendered independently for art alignment inspection.
 
 Press the backtick key during a run to show development hitboxes. This is off by default and not shown in the public interface.
 

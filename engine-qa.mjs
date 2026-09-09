@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import {createRun,jump,releaseJump,slide,releaseSlide,step,STEP,buildPattern,validatePattern,stageAt,targetSpeed,BASE_SPEED,MAX_SPEED,PLAYER_X,TYPES,collides,playerBox,dailySeed,hashSeed} from './dist/engine.js';
 
 function trajectory(hold){const r=createRun({seed:1});r.spawnDistance=1e9;jump(r);let max=0;for(let i=0;i<240;i++){if(i*STEP>=hold)releaseJump(r);step(r,STEP);max=Math.max(max,r.y)}return max}
-const low=trajectory(.02),high=trajectory(.2);assert(low>=69&&low<72,{low});assert(high>165&&high<175,{high});
+const low=trajectory(.02),high=trajectory(.2);assert(low>=69&&low<72,{low});assert(high>198&&high<205,{high});
+
+let jumpGuard=createRun({seed:91});jumpGuard.spawnDistance=1e9;assert(jump(jumpGuard));step(jumpGuard,STEP);const firstVy=jumpGuard.vy;assert(!jump(jumpGuard),'takeoff must consume coyote time');assert.equal(jumpGuard.vy,firstVy,'a second press cannot relaunch in midair');releaseJump(jumpGuard);
+jumpGuard.y=6;jumpGuard.vy=-250;jump(jumpGuard);releaseJump(jumpGuard);while(jumpGuard.y>0)step(jumpGuard,STEP);assert(!jumpGuard.jumpHeld,'a released buffered tap must remain released after landing');
 
 let r=createRun({seed:2});r.spawnDistance=1e9;for(let i=0;i<3600-1;i++)step(r,STEP);assert.equal(r.stage,1);assert.equal(r.speed,BASE_SPEED);step(r,STEP);assert.equal(r.stage,2);for(let i=0;i<600;i++)step(r,STEP);assert(r.speed>BASE_SPEED&&r.speed<targetSpeed(2));assert.equal(stageAt(60),3);assert(targetSpeed(999)<=MAX_SPEED);
 
@@ -11,6 +14,7 @@ const overhead={...TYPES.find(x=>x.id==='branch'),x:PLAYER_X,resolved:'unresolve
 r=createRun({seed:4});r.spawnDistance=1e9;r.shield=true;r.obstacles=[{...TYPES[0],x:PLAYER_X,resolved:'unresolved',passed:false,minClearance:999}];let events=step(r,STEP);assert(events.includes('shield-used'));assert(!r.dead&&!r.shield&&r.invulnerable>.6);const score=r.score;step(r,STEP);assert.equal(r.score,score,'resolved obstacle cannot score twice');
 
 r=createRun({seed:5});r.spawnDistance=1e9;r.bananas=[{x:PLAYER_X,y:48,golden:true,collected:false}];events=step(r,STEP);assert(events.includes('golden'));assert.equal(r.goldenBananas,1);const bonus=r.bonus;step(r,STEP);assert.equal(r.bonus,bonus);
+r=createRun({seed:6});r.spawnDistance=1e9;r.flow=99;r.bananas=[{x:PLAYER_X,y:48,golden:false,collected:false}];events=step(r,STEP);assert(events.includes('chimpion-mode'));assert(r.modeTime>7.9,'banana reaching full Flow must activate Chimpion Mode');
 
 for(const stage of [1,2,3,5,10])for(const seed of [1,77,9001]){const p=buildPattern(targetSpeed(stage),1,()=>seed/10000,stage);assert(validatePattern(p.items,targetSpeed(stage)));for(const o of p.items)assert(o.minStage<=stage||o.id==='log')}
 const earlyPair=[...Array(80)].map((_,i)=>buildPattern(BASE_SPEED,i,()=>((i*37)%99)/100,2)).find(p=>p.id==='quick-hop-high');if(earlyPair)assert((earlyPair.items[1].x-earlyPair.items[0].x-earlyPair.items[0].w)/BASE_SPEED>=1.1);
