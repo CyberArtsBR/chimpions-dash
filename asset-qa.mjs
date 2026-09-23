@@ -38,14 +38,25 @@ for(const rel of ['dist/assets/body-atlas.webp','dist/assets/jungle-v2.webp','di
 const musicBytes=requireFile('dist/assets/chimpions-army.mp3',250000);
 assert(musicBytes<12*1024*1024,'Background music is too large for a lightweight browser game');
 
+const APPROVED=[{"id":"12","name":"The Archon","image":"assets/chimp-12.webp"},{"id":"95","name":"The Heretic","image":"assets/chimp-95.webp"},{"id":"38","name":"The Commodore","image":"assets/chimp-38.webp"},{"id":"158","name":"The Pioneer","image":"assets/chimp-158.webp"},{"id":"166","name":"The Punk","image":"assets/chimp-166.webp"},{"id":"193","name":"The Street Fighter","image":"assets/chimp-193.webp"},{"id":"26","name":"The Bosun","image":"assets/chimp-26.webp"},{"id":"3","name":"The Adolescent","image":"assets/chimp-3.webp"},{"id":"9","name":"The Angsty","image":"assets/chimp-9.webp"},{"id":"11","name":"The Apologetic","image":"assets/chimp-11.webp"}];
 const collection=JSON.parse(fs.readFileSync(path.join(root,'dist','collection.json'),'utf8'));
-assert.equal(collection.length,221,'Collection should contain 221 Chimpions');
-assert.equal(new Set(collection.map(x=>x.id)).size,221,'Chimpion IDs must be unique');
+assert.equal(collection.length,10,'Collection should contain exactly 10 built-in Chimpions');
+assert.deepEqual(collection.map(({id,name,image})=>({id,name,image})),APPROVED,'Collection must match the authoritative 10-character roster and order');
+assert.equal(new Set(collection.map(x=>x.id)).size,10,'Chimpion IDs must be unique');
 for(const c of collection){
  assert(typeof c.name==='string'&&c.name.length>0,`Bad collection name for ${c.id}`);
  assert(/^assets\/chimp-\d+\.webp$/.test(c.image),`Unexpected collection image path: ${c.image}`);
  assert(exists('dist/'+c.image),`Missing portrait: ${c.image}`);
 }
+const portraitFiles=fs.readdirSync(assetRoot).filter(x=>/^chimp-\d+\.webp$/.test(x)).sort();
+const expectedPortraits=APPROVED.map(x=>path.basename(x.image)).sort();
+assert.deepEqual(portraitFiles,expectedPortraits,'Only the 10 approved root portrait assets may ship');
+const legacyHeads=path.join(assetRoot,'heads');
+if(fs.existsSync(legacyHeads))assert.equal(fs.readdirSync(legacyHeads).filter(x=>/^chimp-\d+\.webp$/.test(x)).length,0,'Unused legacy head portraits must not ship');
+function filesUnder(dir){const out=[];for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,ent.name);if(ent.isDirectory())out.push(...filesUnder(full));else out.push(full)}return out}
+assert.equal(filesUnder(path.join(root,'dist')).filter(x=>x.toLowerCase().endsWith('.glb')).length,0,'Dash must remain a 2D build with no tracked GLB runtime assets');
+const runtimeText=['dist/app.js','dist/render.js','dist/index.html'].map(rel=>fs.readFileSync(path.join(root,rel),'utf8')).join('\n');
+assert(!/from\s+['\"]three['\"]|three\.module|THREE\./.test(runtimeText),'Dash must not add a Three.js/3D runtime dependency');
 
 const render=fs.readFileSync(path.join(root,'dist','render.js'),'utf8');
 for(const token of ['assets/ufo-claw.png','assets/ground-green.png','assets/sprites-clean/']){
@@ -53,4 +64,4 @@ for(const token of ['assets/ufo-claw.png','assets/ground-green.png','assets/spri
 }
 assert(render.includes("o.id==='log-pile'"),'Renderer must special-case the long-jump log pile instead of stretching one log');
 
-console.log(`PASS ASSETS: ${spriteIds.size} gameplay sprites, transparent ground/UFO, 221 portraits, music and renderer asset contracts verified`);
+console.log(`PASS ASSETS: ${spriteIds.size} gameplay sprites, transparent ground/UFO, exact 10-character portrait roster, no legacy head portraits/GLBs/Three.js runtime, music and renderer asset contracts verified`);
